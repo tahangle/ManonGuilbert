@@ -60,10 +60,21 @@ body {
     left: 0;
 }
 
+.logo a {
+    text-decoration: none;
+    color: inherit;
+}
+
 .logo h2 {
     font-family: 'Calvino', 'Times New Roman', serif;
     font-size: 30px;
     font-weight: 400;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.logo h2:hover {
+    opacity: 0.7;
 }
 
 .nav-menu {

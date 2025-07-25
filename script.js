@@ -33,6 +33,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Handle logo click to scroll to top
+    const logoLink = document.querySelector('.logo a');
+    logoLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+    
     // Handle click on nav links
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
