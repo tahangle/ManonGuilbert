@@ -1116,6 +1116,16 @@ body {
     line-height: 1.4;
 }
 
+.developer-disclaimer a {
+    color: #999;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.developer-disclaimer a:hover {
+    color: #666;
+}
+
 /* Position contact modal content differently on desktop */
 @media (min-width: 769px) {
     .contact-modal-content {
