@@ -16,26 +16,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const floatingGallery = document.getElementById('floating-gallery');
     const floatingGalleryMobile = document.getElementById('floating-gallery-mobile');
     const galleryItems = document.querySelectorAll('.gallery-item');
+    const projectLinks = document.querySelectorAll('.project-link');
     const leftContent = document.querySelector('.left-content');
-    const projectCategories = document.querySelectorAll('.category-title');
-    const projectItems = document.querySelectorAll('.project-list li');
-    
-    // Store original link texts
-    const originalTexts = {};
-    navLinks.forEach(link => {
-        originalTexts[link.getAttribute('href')] = link.textContent;
-    });
+    const projectCards = document.querySelectorAll('.project-card');
     
     // Function to update active nav link
     function updateActiveLink(activeSection) {
         navLinks.forEach(link => {
             const href = link.getAttribute('href');
-            const originalText = originalTexts[href];
             
             if (href === `#${activeSection}`) {
-                link.textContent = `[ ${originalText} ]`;
+                link.classList.add('active');
             } else {
-                link.textContent = originalText;
+                link.classList.remove('active');
             }
         });
     }
@@ -43,7 +36,43 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle click on nav links
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
+            e.preventDefault();
             const targetId = this.getAttribute('href').substring(1);
+            
+            if (targetId === 'work') {
+                // Scroll to gallery section
+                const isMobile = window.innerWidth <= 768;
+                if (isMobile) {
+                    // On mobile, scroll to mobile gallery
+                    const mobileGallery = document.getElementById('floating-gallery-mobile');
+                    if (mobileGallery) {
+                        const galleryTop = mobileGallery.offsetTop;
+                        window.scrollTo({
+                            top: galleryTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                } else {
+                    // On desktop, scroll to 2650px for gallery
+                    window.scrollTo({
+                        top: 2650,
+                        behavior: 'smooth'
+                    });
+                }
+            } else if (targetId === 'about') {
+                // Scroll to about section
+                window.scrollTo({
+                    top: 200,
+                    behavior: 'smooth'
+                });
+            } else if (targetId === 'contact') {
+                // Scroll to bottom for contact
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }
+            
             updateActiveLink(targetId);
         });
     });
@@ -82,15 +111,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const isMobile = window.innerWidth <= 768;
         console.log('Current scroll:', scrolled, 'Is mobile:', isMobile);
         
-        // Update active nav link based on scroll position
-        // Since all main content belongs to "about" section as mentioned
-        if (scrolled > 50) {
-            updateActiveLink('about');
-        } else {
-            updateActiveLink(''); // Remove active state when at top
-        }
-        
         if (isMobile) {
+            // Update active nav link for mobile based on scroll position
+            const mobileGallery = document.getElementById('floating-gallery-mobile');
+            const galleryTop = mobileGallery ? mobileGallery.offsetTop : 0;
+            const projectsTop = projectsSection.offsetTop;
+            
+            if (scrolled > galleryTop - 200) {
+                updateActiveLink('work');
+            } else if (scrolled > 50) {
+                updateActiveLink('about');
+            } else {
+                updateActiveLink('');
+            }
+            
             // On mobile, all sections are displayed vertically
             studiesSection.style.display = 'flex';
             experienceSection.style.display = 'flex';
@@ -100,28 +134,42 @@ document.addEventListener('DOMContentLoaded', function() {
             // Hide desktop gallery on mobile
             floatingGallery.style.display = 'none';
             
-            // Gradual color transition based on scroll
-            const startColor = '#EBEAE4'; // Original background
-            const endColor = '#F4F3F1';   // Target beige color
+            // Calculate trigger points for mobile
+            const studiesSectionTop = studiesSection.offsetTop;
+            const mobileGalleryTop = floatingGalleryMobile.offsetTop;
             
-            // Calculate transition factor (0 to 1)
-            const transitionStart = 50;  // Start transition at 50px scroll
-            const transitionEnd = 400;   // Complete transition at 400px scroll
-            let factor = Math.max(0, Math.min(1, (scrolled - transitionStart) / (transitionEnd - transitionStart)));
-            
-            // Apply interpolated color to navbar and right content
-            const interpolatedColor = interpolateColor(startColor, endColor, factor);
-            navbar.style.backgroundColor = interpolatedColor;
-            navMenu.style.backgroundColor = interpolatedColor;
-            rightContent.style.backgroundColor = interpolatedColor;
+            // Determine background color based on scroll position
+            if (scrolled < studiesSectionTop - 200) {
+                // Initial state - original background
+                navbar.style.backgroundColor = '#EBEAE4';
+                navMenu.style.backgroundColor = '#EBEAE4';
+                rightContent.style.backgroundColor = '#EBEAE4';
+            } else if (scrolled >= studiesSectionTop - 200 && scrolled < mobileGalleryTop - 300) {
+                // Studies/Experience section - fade to lighter background
+                const transitionStart = studiesSectionTop - 200;
+                const transitionEnd = studiesSectionTop + 200;
+                let factor = Math.max(0, Math.min(1, (scrolled - transitionStart) / (transitionEnd - transitionStart)));
+                const interpolatedColor = interpolateColor('#EBEAE4', '#F4F3F1', factor);
+                navbar.style.backgroundColor = interpolatedColor;
+                navMenu.style.backgroundColor = interpolatedColor;
+                rightContent.style.backgroundColor = interpolatedColor;
+            } else if (scrolled >= mobileGalleryTop - 300) {
+                // Gallery section - fade back to original background
+                const transitionStart = mobileGalleryTop - 300;
+                const transitionEnd = mobileGalleryTop;
+                let factor = Math.max(0, Math.min(1, (scrolled - transitionStart) / (transitionEnd - transitionStart)));
+                const interpolatedColor = interpolateColor('#F4F3F1', '#EBEAE4', factor);
+                navbar.style.backgroundColor = interpolatedColor;
+                navMenu.style.backgroundColor = interpolatedColor;
+                rightContent.style.backgroundColor = interpolatedColor;
+            }
             
             // Calculate trigger points based on actual content position
             const studiesTrigger = 100;
             const experienceSectionTop = experienceSection.offsetTop;
             const experienceTrigger = Math.max(400, experienceSectionTop - window.innerHeight + 200);
-            const galleryTop = floatingGallery.offsetTop;
-            const galleryTrigger = Math.max(600, galleryTop - window.innerHeight + 200);
-            const projectsTop = projectsSection.offsetTop;
+            const desktopGalleryTop = floatingGallery.offsetTop;
+            const galleryTrigger = Math.max(600, desktopGalleryTop - window.innerHeight + 200);
             const projectsTrigger = Math.max(800, projectsTop - window.innerHeight + 200);
             
             // Trigger animations based on scroll position
@@ -168,16 +216,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     projectsTitle.classList.add('visible');
                 }, 200);
                 
-                projectCategories.forEach((cat, index) => {
+                projectCards.forEach((card, index) => {
                     setTimeout(() => {
-                        cat.classList.add('visible');
-                    }, 400 + (index * 100));
-                });
-                
-                projectItems.forEach((item, index) => {
-                    setTimeout(() => {
-                        item.classList.add('visible');
-                    }, 600 + (index * 50));
+                        card.classList.add('visible');
+                    }, 400 + (index * 200));
                 });
             }
             
@@ -198,14 +240,25 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (scrolled <= projectsTrigger) {
                 projectsTitle.classList.remove('visible');
-                projectCategories.forEach(cat => cat.classList.remove('visible'));
-                projectItems.forEach(item => item.classList.remove('visible'));
+                projectCards.forEach(card => card.classList.remove('visible'));
             }
             
             return;
         }
         
-        if (scrolled > 100 && scrolled <= 1200) {
+        // Desktop active link logic
+        if (scrolled > 2600) {
+            // Gallery is visible, we're in "work" section
+            updateActiveLink('work');
+        } else if (scrolled > 50) {
+            // Text content is visible, we're in "about" section
+            updateActiveLink('about');
+        } else {
+            updateActiveLink(''); // Remove active state when at top
+        }
+        
+        if (scrolled > 100 && scrolled <= 1600) {
+            console.log('Showing studies section');
             // Show studies section
             rightContent.classList.add('visible');
             studiesSection.style.display = 'flex';
@@ -235,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 item.classList.remove('visible', 'floating');
             });
             
-        } else if (scrolled > 1200 && scrolled <= 1800) {
+        } else if (scrolled > 1600 && scrolled <= 2600) {
             // Show experience section with text content
             rightContent.classList.add('visible');
             studiesSection.style.display = 'none';
@@ -264,12 +317,10 @@ document.addEventListener('DOMContentLoaded', function() {
             studiesCards.forEach(card => card.classList.remove('visible'));
             galleryItems.forEach(item => item.classList.remove('visible', 'floating'));
             projectsTitle.classList.remove('visible');
-            projectCategories.forEach(cat => cat.classList.remove('visible'));
-            projectItems.forEach(item => item.classList.remove('visible'));
+            projectCards.forEach(card => card.classList.remove('visible'));
             
-        } else if (scrolled > 1800 && scrolled <= 2400) {
+        } else if (scrolled > 2600 && scrolled <= 3400) {
             // Keep experience section, switch to gallery
-            console.log('Gallery should show now, scrolled:', scrolled);
             rightContent.classList.add('visible');
             studiesSection.style.display = 'none';
             experienceSection.style.display = 'flex';
@@ -283,7 +334,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 floatingGallery.classList.add('visible');
             }, 50);
             leftContent.style.backgroundColor = '#F4F3F1'; // Match right content background
-            console.log('Gallery display:', floatingGallery.style.display);
             
             // Keep experience content visible
             experienceTitle.classList.add('visible');
@@ -304,10 +354,10 @@ document.addEventListener('DOMContentLoaded', function() {
             studiesTitle.classList.remove('visible');
             studiesCards.forEach(card => card.classList.remove('visible'));
             projectsTitle.classList.remove('visible');
-            projectCategories.forEach(cat => cat.classList.remove('visible'));
-            projectItems.forEach(item => item.classList.remove('visible'));
+            projectCards.forEach(card => card.classList.remove('visible'));
             
-        } else if (scrolled > 2400) {
+        } else if (scrolled > 3400) {
+            console.log('Showing projects section');
             // Show projects section
             rightContent.classList.add('visible');
             studiesSection.style.display = 'none';
@@ -330,16 +380,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 projectsTitle.classList.add('visible');
             }, 200);
             
-            projectCategories.forEach((cat, index) => {
+            projectCards.forEach((card, index) => {
                 setTimeout(() => {
-                    cat.classList.add('visible');
-                }, 400 + (index * 100));
-            });
-            
-            projectItems.forEach((item, index) => {
-                setTimeout(() => {
-                    item.classList.add('visible');
-                }, 600 + (index * 50));
+                    card.classList.add('visible');
+                }, 400 + (index * 200));
             });
             
             // Reset other animations
@@ -349,13 +393,14 @@ document.addEventListener('DOMContentLoaded', function() {
             experienceCards.forEach(card => card.classList.remove('visible'));
             
         } else {
+            // Initial state when at the very top of the page (scroll < 100)
             // Desktop behavior - reset any mobile color changes
             navbar.style.backgroundColor = '';
             navMenu.style.backgroundColor = '';
             rightContent.style.backgroundColor = '';
             leftContent.style.backgroundColor = ''; // Reset left background
             
-            // Hide everything
+            // Hide right content when at the very top
             rightContent.classList.remove('visible');
             studiesSection.style.display = 'flex';
             experienceSection.style.display = 'none';
@@ -373,8 +418,7 @@ document.addEventListener('DOMContentLoaded', function() {
             studiesCards.forEach(card => card.classList.remove('visible'));
             experienceCards.forEach(card => card.classList.remove('visible'));
             galleryItems.forEach(item => item.classList.remove('visible', 'floating'));
-            projectCategories.forEach(cat => cat.classList.remove('visible'));
-            projectItems.forEach(item => item.classList.remove('visible'));
+            projectCards.forEach(card => card.classList.remove('visible'));
         }
     }, { passive: true });
     
@@ -405,4 +449,157 @@ document.addEventListener('DOMContentLoaded', function() {
         // Ensure desktop gallery is absolutely positioned
         floatingGallery.style.position = 'absolute';
     }
+    
+    // Trigger initial scroll event to set correct state
+    window.dispatchEvent(new Event('scroll'));
+    
+    // Handle window resize to reset styles appropriately
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            const isNowMobile = window.innerWidth <= 768;
+            const isNowDesktop = window.innerWidth > 768;
+            
+            if (isNowDesktop) {
+                // Reset desktop styles
+                navbar.style.backgroundColor = '';
+                navMenu.style.backgroundColor = '';
+                rightContent.style.backgroundColor = '';
+                leftContent.style.backgroundColor = '';
+                
+                // Reset mobile-specific display properties
+                floatingGalleryMobile.style.display = 'none';
+                
+                // Re-trigger scroll to set correct desktop state
+                window.dispatchEvent(new Event('scroll'));
+            } else if (isNowMobile) {
+                // Ensure mobile styles are applied
+                floatingGalleryMobile.style.display = 'block';
+                navbar.style.backgroundColor = '#EBEAE4';
+                navMenu.style.backgroundColor = '#EBEAE4';
+                rightContent.style.backgroundColor = '#EBEAE4';
+                
+                // Re-trigger scroll to set correct mobile state
+                window.dispatchEvent(new Event('scroll'));
+            }
+        }, 250); // Debounce resize events
+    });
+    
+    // Modal elements
+    const modal = document.getElementById('image-modal');
+    const modalClose = document.querySelector('.modal-close');
+    const modalImage = document.getElementById('modal-image');
+    const photographerName = document.getElementById('photographer-name');
+    const stylistName = document.getElementById('stylist-name');
+    
+    // Gallery interactions
+    galleryItems.forEach(item => {
+        const projectName = item.getAttribute('data-project-name');
+        
+        if (window.innerWidth > 768) {
+            // Desktop hover interactions
+            item.addEventListener('mouseenter', function() {
+                // Find and highlight the corresponding project link
+                projectLinks.forEach(link => {
+                    if (link.getAttribute('data-project-name') === projectName) {
+                        link.classList.add('highlight');
+                    }
+                });
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                // Only remove highlight if modal is not open
+                if (!modal.classList.contains('active')) {
+                    projectLinks.forEach(link => {
+                        link.classList.remove('highlight');
+                    });
+                }
+            });
+        }
+        
+        // Click functionality for modal (both desktop and mobile)
+        item.addEventListener('click', function() {
+            // Set modal content
+            modalImage.src = this.src;
+            modalImage.alt = this.alt;
+            photographerName.textContent = this.getAttribute('data-photographer') || 'Unknown';
+            stylistName.textContent = this.getAttribute('data-stylist') || 'Unknown';
+            
+            // Show modal
+            modal.classList.add('active');
+            
+            // Keep the project highlighted while modal is open
+            projectLinks.forEach(link => {
+                if (link.getAttribute('data-project-name') === projectName) {
+                    link.classList.add('highlight');
+                }
+            });
+        });
+    });
+    
+    // Add click functionality to project titles on mobile
+    if (window.innerWidth <= 768) {
+        projectLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const projectName = this.getAttribute('data-project-name');
+                
+                // Find the corresponding image
+                const correspondingImage = Array.from(galleryItems).find(item => 
+                    item.getAttribute('data-project-name') === projectName
+                );
+                
+                if (correspondingImage) {
+                    // Set modal content
+                    modalImage.src = correspondingImage.src;
+                    modalImage.alt = correspondingImage.alt;
+                    photographerName.textContent = correspondingImage.getAttribute('data-photographer') || 'Unknown';
+                    stylistName.textContent = correspondingImage.getAttribute('data-stylist') || 'Unknown';
+                    
+                    // Show modal
+                    modal.classList.add('active');
+                    
+                    // Highlight this project
+                    this.classList.add('highlight');
+                }
+            });
+        });
+    }
+    
+    // Store currently highlighted project
+    let currentHighlightedProject = null;
+    
+    modalClose.addEventListener('click', function() {
+        modal.classList.remove('active');
+        // Remove highlight from all project links
+        projectLinks.forEach(link => {
+            link.classList.remove('highlight');
+        });
+        currentHighlightedProject = null;
+    });
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+            // Remove highlight from all project links
+            projectLinks.forEach(link => {
+                link.classList.remove('highlight');
+            });
+            currentHighlightedProject = null;
+        }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            modal.classList.remove('active');
+            // Remove highlight from all project links
+            projectLinks.forEach(link => {
+                link.classList.remove('highlight');
+            });
+            currentHighlightedProject = null;
+        }
+    });
 });
