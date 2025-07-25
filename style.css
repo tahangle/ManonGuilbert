@@ -1182,19 +1182,20 @@ body {
     .footer-content {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
+        align-items: center;
     }
     
     .footer-links {
         display: flex;
-        flex-direction: column;
-        gap: 5px;
+        flex-direction: row;
+        gap: 20px;
     }
     
     .footer-links a {
-        font-family: 'EB Garamond', serif;
-        font-size: 16px;
+        font-family: 'ApercuMono', monospace;
+        font-size: 12px;
         font-weight: 400;
+        text-transform: uppercase;
         color: #000;
         text-decoration: none;
         transition: opacity 0.3s ease;
@@ -1205,10 +1206,9 @@ body {
     }
     
     .footer-credit {
-        font-family: 'ApercuMono', monospace;
-        font-size: 12px;
-        font-weight: 300;
-        text-transform: uppercase;
+        font-family: 'EB Garamond', serif;
+        font-size: 16px;
+        font-weight: 400;
         text-align: right;
     }
 }
