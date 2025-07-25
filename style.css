@@ -25,7 +25,7 @@ body {
     background-color: #EBEAE4;
     color: #000;
     line-height: 100%;
-    height: 300vh; /* Make body scrollable with more space */
+    height: 400vh; /* Increased height to ensure we can scroll to 2400px */
     overflow-x: hidden;
 }
 
@@ -82,6 +82,159 @@ body {
 
 /* Removed empty hover rule */
 
+/* Floating Gallery */
+.floating-gallery {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100vh;
+    display: none; /* Start hidden */
+    z-index: 10;
+    background-color: #F4F3F1;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.8s ease-out;
+}
+
+.floating-gallery.visible {
+    opacity: 1;
+}
+
+.gallery-grid {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.gallery-item {
+    position: absolute;
+    opacity: 0;
+    transition: opacity 1s ease-out;
+}
+
+/* Position each image based on exact coordinates */
+/* Project 5: X:-95 Y:-9 W:210 H:262 */
+.gallery-item[data-float="1"] {
+    left: -95px;
+    top: -9px;
+    width: 210px;
+    height: 262px;
+    object-fit: cover;
+}
+
+/* Project 6: X:172 Y:-9 W:209 H:209 */
+.gallery-item[data-float="2"] {
+    left: 172px;
+    top: -9px;
+    width: 209px;
+    height: 209px;
+    object-fit: cover;
+}
+
+/* Project 3: X:402 Y:21 W:204 H:247 */
+.gallery-item[data-float="3"] {
+    left: 402px;
+    top: 21px;
+    width: 204px;
+    height: 247px;
+    object-fit: cover;
+}
+
+/* Project 8: X:655 Y:-72 W:191 H:253 */
+.gallery-item[data-float="4"] {
+    left: 655px;
+    top: -72px;
+    width: 191px;
+    height: 253px;
+    object-fit: cover;
+}
+
+/* Project 9: X:-57 Y:328 W:211 H:263 */
+.gallery-item[data-float="5"] {
+    left: -57px;
+    top: 328px;
+    width: 211px;
+    height: 263px;
+    object-fit: cover;
+}
+
+/* Project 2: X:208 Y:265 W:206 H:129 */
+.gallery-item[data-float="6"] {
+    left: 208px;
+    top: 265px;
+    width: 206px;
+    height: 129px;
+    object-fit: cover;
+}
+
+/* Project 7: X:520 Y:251 W:115 H:144 */
+.gallery-item[data-float="7"] {
+    left: 520px;
+    top: 251px;
+    width: 115px;
+    height: 144px;
+    object-fit: cover;
+}
+
+/* Project 4: X:256 Y:439 W:207 H:259 */
+.gallery-item[data-float="8"] {
+    left: 256px;
+    top: 439px;
+    width: 207px;
+    height: 259px;
+    object-fit: cover;
+}
+
+/* Project 11: X:467 Y:447 W:168 H:168 */
+.gallery-item[data-float="9"] {
+    left: 467px;
+    top: 447px;
+    width: 168px;
+    height: 168px;
+    object-fit: cover;
+}
+
+/* Project 10: X:665 Y:409 W:81 H:101 */
+.gallery-item[data-float="10"] {
+    left: 665px;
+    top: 409px;
+    width: 81px;
+    height: 101px;
+    object-fit: cover;
+}
+
+/* Visible state */
+.gallery-item.visible {
+    opacity: 1;
+}
+
+/* Subtle floating animation - Y axis only */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+.gallery-item.floating {
+    animation: float 4s ease-in-out infinite;
+}
+
+/* Different animation delays for natural movement */
+.gallery-item[data-float="1"] { animation-delay: 0s; }
+.gallery-item[data-float="2"] { animation-delay: 0.3s; }
+.gallery-item[data-float="3"] { animation-delay: 0.6s; }
+.gallery-item[data-float="4"] { animation-delay: 0.9s; }
+.gallery-item[data-float="5"] { animation-delay: 1.2s; }
+.gallery-item[data-float="6"] { animation-delay: 1.5s; }
+.gallery-item[data-float="7"] { animation-delay: 1.8s; }
+.gallery-item[data-float="8"] { animation-delay: 2.1s; }
+.gallery-item[data-float="9"] { animation-delay: 2.4s; }
+.gallery-item[data-float="10"] { animation-delay: 2.7s; }
+
 .main-content {
     position: fixed;
     top: 0;
@@ -98,6 +251,9 @@ body {
     flex-direction: column;
     justify-content: center;
     padding: 60px 60px 60px 30px;
+    position: relative;
+    z-index: 5;
+    transition: background-color 0.8s ease-out;
 }
 
 .right-content {
@@ -270,6 +426,68 @@ body {
     transition-delay: 0.45s;
 }
 
+/* Projects Section */
+.projects-section {
+    width: 100%;
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.projects-container {
+    width: 100%;
+    max-width: 600px;
+}
+
+.project-category {
+    margin-bottom: 40px;
+}
+
+.category-title {
+    font-family: 'ApercuMono', monospace;
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 15px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.category-title.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.project-list {
+    list-style: none;
+    margin-bottom: 30px;
+}
+
+.project-list li {
+    font-family: 'EB Garamond', serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    cursor: pointer;
+}
+
+.project-list li:hover {
+    text-decoration: underline;
+}
+
+.project-list li.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
 .menu-toggle {
     display: none;
     font-family: 'ApercuMono', monospace;
@@ -419,5 +637,58 @@ body {
     .degree-type,
     .study-details {
         font-size: 12px;
+    }
+    
+    /* Mobile Gallery */
+    .floating-gallery.mobile-gallery {
+        position: relative !important;
+        width: 100% !important;
+        margin-top: 0;
+        padding: 40px 20px;
+        height: auto;
+        min-height: 600px;
+        background-color: #EBEAE4 !important;
+        display: none; /* Hidden by default, JS will show it */
+        z-index: 1;
+        opacity: 1 !important;
+    }
+    
+    .gallery-grid {
+        position: relative;
+        height: auto;
+        min-height: 500px;
+    }
+    
+    .gallery-item {
+        position: absolute;
+        max-width: 150px;
+    }
+    
+    /* Adjust image sizes for mobile */
+    .gallery-item[data-float="1"] { width: 80px; }
+    .gallery-item[data-float="2"] { width: 120px; }
+    .gallery-item[data-float="3"] { width: 110px; }
+    .gallery-item[data-float="4"] { width: 90px; }
+    .gallery-item[data-float="5"] { width: 100px; }
+    .gallery-item[data-float="6"] { width: 85px; }
+    .gallery-item[data-float="7"] { width: 95px; }
+    .gallery-item[data-float="8"] { width: 140px; }
+    .gallery-item[data-float="9"] { width: 70px; }
+    .gallery-item[data-float="10"] { width: 90px; }
+    
+    /* Mobile Projects */
+    .projects-section {
+        padding: 40px 20px;
+        background-color: #F4F3F1;
+    }
+    
+    .category-title {
+        font-size: 9px;
+        margin-bottom: 12px;
+    }
+    
+    .project-list li {
+        font-size: 14px;
+        margin-bottom: 6px;
     }
 }

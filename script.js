@@ -2,14 +2,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const rightContent = document.querySelector('.right-content');
     const studiesSection = document.getElementById('studies-section');
     const experienceSection = document.getElementById('experience-section');
+    const projectsSection = document.getElementById('projects-section');
     const studiesTitle = studiesSection.querySelector('.section-title');
     const experienceTitle = experienceSection.querySelector('.section-title');
+    const projectsTitle = projectsSection.querySelector('.section-title');
     const studiesCards = document.querySelectorAll('.studies-card');
     const experienceCards = document.querySelectorAll('.experience-card');
     const menuToggle = document.getElementById('menu-toggle');
     const navMenu = document.getElementById('nav-menu');
     const navbar = document.querySelector('.navbar');
     const navLinks = document.querySelectorAll('.nav-menu a');
+    const textContent = document.getElementById('text-content');
+    const floatingGallery = document.getElementById('floating-gallery');
+    const floatingGalleryMobile = document.getElementById('floating-gallery-mobile');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const leftContent = document.querySelector('.left-content');
+    const projectCategories = document.querySelectorAll('.category-title');
+    const projectItems = document.querySelectorAll('.project-list li');
     
     // Store original link texts
     const originalTexts = {};
@@ -71,6 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('scroll', function() {
         const scrolled = window.scrollY;
         const isMobile = window.innerWidth <= 768;
+        console.log('Current scroll:', scrolled, 'Is mobile:', isMobile);
         
         // Update active nav link based on scroll position
         // Since all main content belongs to "about" section as mentioned
@@ -81,9 +91,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (isMobile) {
-            // On mobile, both sections are always displayed
+            // On mobile, all sections are displayed vertically
             studiesSection.style.display = 'flex';
             experienceSection.style.display = 'flex';
+            projectsSection.style.display = 'flex';
+            floatingGalleryMobile.style.display = 'block';
+            textContent.style.display = 'block';
+            // Hide desktop gallery on mobile
+            floatingGallery.style.display = 'none';
             
             // Gradual color transition based on scroll
             const startColor = '#EBEAE4'; // Original background
@@ -104,6 +119,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const studiesTrigger = 100;
             const experienceSectionTop = experienceSection.offsetTop;
             const experienceTrigger = Math.max(400, experienceSectionTop - window.innerHeight + 200);
+            const galleryTop = floatingGallery.offsetTop;
+            const galleryTrigger = Math.max(600, galleryTop - window.innerHeight + 200);
+            const projectsTop = projectsSection.offsetTop;
+            const projectsTrigger = Math.max(800, projectsTop - window.innerHeight + 200);
             
             // Trigger animations based on scroll position
             if (scrolled > studiesTrigger) {
@@ -130,6 +149,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
             
+            if (scrolled > galleryTrigger) {
+                // Animate gallery items
+                galleryItems.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.classList.add('visible');
+                        // Add floating animation after fade in
+                        setTimeout(() => {
+                            item.classList.add('floating');
+                        }, 500);
+                    }, 200 + (index * 150));
+                });
+            }
+            
+            if (scrolled > projectsTrigger) {
+                // Animate projects content
+                setTimeout(() => {
+                    projectsTitle.classList.add('visible');
+                }, 200);
+                
+                projectCategories.forEach((cat, index) => {
+                    setTimeout(() => {
+                        cat.classList.add('visible');
+                    }, 400 + (index * 100));
+                });
+                
+                projectItems.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.classList.add('visible');
+                    }, 600 + (index * 50));
+                });
+            }
+            
             // Remove animations when scrolling back up
             if (scrolled <= studiesTrigger) {
                 studiesTitle.classList.remove('visible');
@@ -141,6 +192,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 experienceCards.forEach(card => card.classList.remove('visible'));
             }
             
+            if (scrolled <= galleryTrigger) {
+                galleryItems.forEach(item => item.classList.remove('visible', 'floating'));
+            }
+            
+            if (scrolled <= projectsTrigger) {
+                projectsTitle.classList.remove('visible');
+                projectCategories.forEach(cat => cat.classList.remove('visible'));
+                projectItems.forEach(item => item.classList.remove('visible'));
+            }
+            
             return;
         }
         
@@ -149,6 +210,13 @@ document.addEventListener('DOMContentLoaded', function() {
             rightContent.classList.add('visible');
             studiesSection.style.display = 'flex';
             experienceSection.style.display = 'none';
+            projectsSection.style.display = 'none';
+            
+            // Show text content, hide gallery, reset background
+            textContent.style.display = 'block';
+            floatingGallery.style.display = 'none';
+            floatingGallery.classList.remove('visible');
+            leftContent.style.backgroundColor = ''; // Reset to original color
             
             // Animate studies content
             setTimeout(() => {
@@ -160,52 +228,153 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 400 + (index * 200));
             });
             
-            // Reset experience animations
+            // Reset other animations
             experienceTitle.classList.remove('visible');
-            experienceCards.forEach(card => {
-                card.classList.remove('visible');
+            experienceCards.forEach(card => card.classList.remove('visible'));
+            galleryItems.forEach(item => {
+                item.classList.remove('visible', 'floating');
             });
             
-        } else if (scrolled > 1200) {
-            // Show experience section
+        } else if (scrolled > 1200 && scrolled <= 1800) {
+            // Show experience section with text content
             rightContent.classList.add('visible');
             studiesSection.style.display = 'none';
             experienceSection.style.display = 'flex';
+            projectsSection.style.display = 'none';
+            
+            // Keep text content visible, reset left background
+            textContent.style.display = 'block';
+            floatingGallery.style.display = 'none';
+            floatingGallery.classList.remove('visible');
+            leftContent.style.backgroundColor = ''; // Reset to original color
             
             // Animate experience content
             setTimeout(() => {
                 experienceTitle.classList.add('visible');
             }, 200);
+            
             experienceCards.forEach((card, index) => {
                 setTimeout(() => {
                     card.classList.add('visible');
-                }, 400 + (index * 200));
+                }, 400 + (index * 150));
             });
             
-            // Reset studies animations
+            // Reset other animations
             studiesTitle.classList.remove('visible');
-            studiesCards.forEach(card => {
-                card.classList.remove('visible');
+            studiesCards.forEach(card => card.classList.remove('visible'));
+            galleryItems.forEach(item => item.classList.remove('visible', 'floating'));
+            projectsTitle.classList.remove('visible');
+            projectCategories.forEach(cat => cat.classList.remove('visible'));
+            projectItems.forEach(item => item.classList.remove('visible'));
+            
+        } else if (scrolled > 1800 && scrolled <= 2400) {
+            // Keep experience section, switch to gallery
+            console.log('Gallery should show now, scrolled:', scrolled);
+            rightContent.classList.add('visible');
+            studiesSection.style.display = 'none';
+            experienceSection.style.display = 'flex';
+            projectsSection.style.display = 'none';
+            
+            // Switch to gallery and change left background to match right
+            textContent.style.display = 'none';
+            floatingGallery.style.display = 'flex';
+            // Add visible class for fade-in effect
+            setTimeout(() => {
+                floatingGallery.classList.add('visible');
+            }, 50);
+            leftContent.style.backgroundColor = '#F4F3F1'; // Match right content background
+            console.log('Gallery display:', floatingGallery.style.display);
+            
+            // Keep experience content visible
+            experienceTitle.classList.add('visible');
+            experienceCards.forEach(card => card.classList.add('visible'));
+            
+            // Animate gallery items
+            galleryItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.add('visible');
+                    // Add floating animation after fade in
+                    setTimeout(() => {
+                        item.classList.add('floating');
+                    }, 500);
+                }, 200 + (index * 150));
             });
+            
+            // Reset other animations
+            studiesTitle.classList.remove('visible');
+            studiesCards.forEach(card => card.classList.remove('visible'));
+            projectsTitle.classList.remove('visible');
+            projectCategories.forEach(cat => cat.classList.remove('visible'));
+            projectItems.forEach(item => item.classList.remove('visible'));
+            
+        } else if (scrolled > 2400) {
+            // Show projects section
+            rightContent.classList.add('visible');
+            studiesSection.style.display = 'none';
+            experienceSection.style.display = 'none';
+            projectsSection.style.display = 'flex';
+            
+            // Keep gallery visible and background color
+            textContent.style.display = 'none';
+            floatingGallery.style.display = 'flex';
+            floatingGallery.classList.add('visible'); // Ensure visible class
+            leftContent.style.backgroundColor = '#F4F3F1'; // Keep matching background
+            
+            // Ensure gallery is fully visible with floating
+            galleryItems.forEach(item => {
+                item.classList.add('visible', 'floating');
+            });
+            
+            // Animate projects content
+            setTimeout(() => {
+                projectsTitle.classList.add('visible');
+            }, 200);
+            
+            projectCategories.forEach((cat, index) => {
+                setTimeout(() => {
+                    cat.classList.add('visible');
+                }, 400 + (index * 100));
+            });
+            
+            projectItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.add('visible');
+                }, 600 + (index * 50));
+            });
+            
+            // Reset other animations
+            studiesTitle.classList.remove('visible');
+            studiesCards.forEach(card => card.classList.remove('visible'));
+            experienceTitle.classList.remove('visible');
+            experienceCards.forEach(card => card.classList.remove('visible'));
             
         } else {
             // Desktop behavior - reset any mobile color changes
             navbar.style.backgroundColor = '';
             navMenu.style.backgroundColor = '';
             rightContent.style.backgroundColor = '';
+            leftContent.style.backgroundColor = ''; // Reset left background
             
             // Hide everything
             rightContent.classList.remove('visible');
             studiesSection.style.display = 'flex';
             experienceSection.style.display = 'none';
+            projectsSection.style.display = 'none';
+            
+            // Show text content, hide gallery
+            textContent.style.display = 'block';
+            floatingGallery.style.display = 'none';
+            floatingGallery.classList.remove('visible');
+            
+            // Reset all animations
             studiesTitle.classList.remove('visible');
             experienceTitle.classList.remove('visible');
-            studiesCards.forEach(card => {
-                card.classList.remove('visible');
-            });
-            experienceCards.forEach(card => {
-                card.classList.remove('visible');
-            });
+            projectsTitle.classList.remove('visible');
+            studiesCards.forEach(card => card.classList.remove('visible'));
+            experienceCards.forEach(card => card.classList.remove('visible'));
+            galleryItems.forEach(item => item.classList.remove('visible', 'floating'));
+            projectCategories.forEach(cat => cat.classList.remove('visible'));
+            projectItems.forEach(item => item.classList.remove('visible'));
         }
     }, { passive: true });
     
@@ -214,6 +383,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Display sections but don't trigger animations until scroll
         studiesSection.style.display = 'flex';
         experienceSection.style.display = 'flex';
+        projectsSection.style.display = 'flex';
+        
+        // Show mobile gallery after experience on mobile
+        floatingGalleryMobile.style.display = 'block';
+        // Hide desktop gallery
+        floatingGallery.style.display = 'none';
         
         // Set initial colors for mobile
         navbar.style.backgroundColor = '#EBEAE4';
@@ -224,5 +399,10 @@ document.addEventListener('DOMContentLoaded', function() {
         navbar.style.backgroundColor = '';
         navMenu.style.backgroundColor = '';
         rightContent.style.backgroundColor = '';
+        
+        // Hide mobile gallery on desktop
+        floatingGalleryMobile.style.display = 'none';
+        // Ensure desktop gallery is absolutely positioned
+        floatingGallery.style.position = 'absolute';
     }
 });
