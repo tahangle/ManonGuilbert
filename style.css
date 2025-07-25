@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'Calvino';
-    src: url('fonts/Calvino-Book-trial.ttf') format('truetype');
-    font-weight: normal;
+    src: url('fonts/Calvino-Variable-trial.ttf') format('truetype-variations');
+    font-weight: 100 900;
     font-style: normal;
 }
 
@@ -12,12 +12,7 @@
     font-style: normal;
 }
 
-@font-face {
-    font-family: 'EbGaramond';
-    src: url('fonts/EBGaramond-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
+/* EB Garamond now loaded from Google Fonts */
 
 * {
     margin: 0;
@@ -26,7 +21,7 @@
 }
 
 body {
-    font-family: 'Times New Roman', serif;
+    font-family: 'EB Garamond', 'Times New Roman', serif;
     background-color: #EBEAE4;
     color: #2c2c2c;
     line-height: 1.6;
@@ -39,7 +34,6 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: #EBEAE4;
     z-index: 1000;
     padding: 20px 30px;
 }
@@ -55,6 +49,7 @@ body {
 .logo h2 {
     font-family: 'Calvino', 'Times New Roman', serif;
     font-size: 30px;
+    font-weight: 400;
     color: #000;
 }
 
@@ -121,7 +116,7 @@ body {
     color: #000;
     font-size: 38px;
     font-style: normal;
-    font-weight: normal;
+    font-weight: 400;
     line-height: 99%;
 }
 
@@ -139,7 +134,7 @@ body {
 
 .description-left p,
 .description-right p {
-    font-family: "EBGaramond", serif;
+    font-family: 'EB Garamond', serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -215,7 +210,7 @@ body {
 .degree-title {
     color: #000;
     text-align: center;
-    font-family: 'EBGaramond', serif;
+    font-family: 'EB Garamond', serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -322,9 +317,7 @@ body {
     }
     
     .logo h2 {
-        font-family: 'Calvino', 'Times New Roman', serif;
         font-size: 30px;
-        font-weight: normal;
     }
     
     .menu-toggle {
@@ -380,13 +373,7 @@ body {
     }
     
     .intro-text h1 {
-        font-family: 'Calvino', 'Times New Roman', serif;
         font-size: 28px;
-        font-style: normal;
-        font-weight: normal;
-        line-height: 99%;
-        width: 100%;
-        height: auto;
         margin-bottom: 30px;
     }
     
@@ -396,14 +383,7 @@ body {
         max-width: 100%;
     }
     
-    .description-left p,
-    .description-right p {
-        font-family: 'EBGaramond', serif;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 100.17%;
-    }
+    /* Description text styles inherit from desktop */
     
     .right-content {
         margin-top: 60px;
@@ -431,51 +411,24 @@ body {
     
     .studies-cards {
         flex-direction: column;
-        gap: 40px;
+        gap: 80px;
         opacity: 1;
         transform: none;
     }
     
     .experience-cards {
-        gap: 30px;
+        gap: 70px;
     }
     
-    .studies-card,
-    .experience-card {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    
-    .studies-card.visible,
-    .experience-card.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    .institution {
-        font-family: 'ApercuMono', monospace;
-        font-size: 9px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 100.17%;
-        text-transform: uppercase;
-    }
+    /* Card animations handled by existing CSS */
     
     .degree-title {
-        font-family: 'EBGaramond', serif;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 100.17%;
+        font-size: 20px;
     }
     
+    .institution,
     .degree-type,
     .study-details {
-        font-family: 'ApercuMono', monospace;
-        font-size: 9px;
-        font-style: normal;
-        font-weight: 300;
-        line-height: 100.17%;
-        text-transform: uppercase;
+        font-size: 12px;
     }
 }
