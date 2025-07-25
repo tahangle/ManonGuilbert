@@ -19,10 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const projectLinks = document.querySelectorAll('.project-link');
     const leftContent = document.querySelector('.left-content');
     const projectCards = document.querySelectorAll('.project-card');
-    const contactSection = document.getElementById('contact-section');
-    const contactTitle = document.querySelector('.contact-title');
-    const contactCards = document.querySelectorAll('.contact-card');
-    const designerCredit = document.querySelector('.designer-credit p');
     
     // Function to update active nav link
     function updateActiveLink(activeSection) {
@@ -69,24 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     top: 200,
                     behavior: 'smooth'
                 });
-            } else if (targetId === 'contact') {
-                // Scroll to contact section
-                const isMobile = window.innerWidth <= 768;
-                if (isMobile) {
-                    // On mobile, scroll to bottom
-                    const documentHeight = document.documentElement.scrollHeight;
-                    window.scrollTo({
-                        top: documentHeight,
-                        behavior: 'smooth'
-                    });
-                } else {
-                    // On desktop
-                    window.scrollTo({
-                        top: 4600,
-                        behavior: 'smooth'
-                    });
-                }
-            }
             
             updateActiveLink(targetId);
         });
@@ -135,9 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const windowHeight = window.innerHeight;
             const maxScroll = documentHeight - windowHeight;
             
-            if (scrolled > maxScroll - 200) {
-                updateActiveLink('contact');
-            } else if (scrolled > galleryTop - 200) {
+            if (scrolled > galleryTop - 200) {
                 updateActiveLink('work');
             } else if (scrolled > 50) {
                 updateActiveLink('about');
@@ -154,17 +130,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Hide desktop gallery on mobile
             floatingGallery.style.display = 'none';
             
-            // Show contact when scrolled near the bottom
-            if (scrolled > maxScroll - 200) {
-                contactSection.style.display = 'flex';
-            } else {
-                contactSection.style.display = 'none';
-            }
             
             // Calculate trigger points for mobile
             const studiesSectionTop = studiesSection.offsetTop;
             const mobileGalleryTop = floatingGalleryMobile.offsetTop;
-            const contactSectionTop = contactSection.offsetTop;
             
             // Determine background color based on scroll position
             if (scrolled < studiesSectionTop - 200) {
@@ -186,14 +155,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 navbar.style.backgroundColor = '#EBEAE4';
                 navMenu.style.backgroundColor = '#EBEAE4';
                 rightContent.style.backgroundColor = '#EBEAE4';
-            } else if (scrolled >= maxScroll - 200) {
-                // Contact section - fade to contact background
-                const transitionStart = maxScroll - 200;
-                const transitionEnd = maxScroll;
-                let factor = Math.max(0, Math.min(1, (scrolled - transitionStart) / (transitionEnd - transitionStart)));
-                const interpolatedColor = interpolateColor('#EBEAE4', '#F4F3F1', factor);
-                navbar.style.backgroundColor = interpolatedColor;
-                navMenu.style.backgroundColor = interpolatedColor;
             }
             
             // Calculate trigger points based on actual content position
@@ -203,7 +164,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const desktopGalleryTop = floatingGallery.offsetTop;
             const galleryTrigger = Math.max(600, desktopGalleryTop - window.innerHeight + 200);
             const projectsTrigger = Math.max(800, projectsTop - window.innerHeight + 200);
-            const contactTrigger = maxScroll - 100;
             
             // Trigger animations based on scroll position
             if (scrolled > studiesTrigger) {
@@ -256,23 +216,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
             
-            if (scrolled > contactTrigger) {
-                // Animate contact section on mobile
-                setTimeout(() => {
-                    contactTitle.classList.add('visible');
-                }, 200);
-                
-                contactCards.forEach((card, index) => {
-                    setTimeout(() => {
-                        card.classList.add('visible');
-                    }, 800 + (index * 200));
-                });
-                
-                setTimeout(() => {
-                    designerCredit.classList.add('visible');
-                }, 1600);
-            }
-            
             // Remove animations when scrolling back up
             if (scrolled <= studiesTrigger) {
                 studiesTitle.classList.remove('visible');
@@ -293,20 +236,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 projectCards.forEach(card => card.classList.remove('visible'));
             }
             
-            if (scrolled <= contactTrigger) {
-                contactTitle.classList.remove('visible');
-                contactCards.forEach(card => card.classList.remove('visible'));
-                designerCredit.classList.remove('visible');
-            }
-            
             return;
         }
         
         // Desktop active link logic
-        if (scrolled > 4500) {
-            // Contact section is visible
-            updateActiveLink('contact');
-        } else if (scrolled > 2600) {
+        if (scrolled > 2600) {
             // Gallery is visible, we're in "work" section
             updateActiveLink('work');
         } else if (scrolled > 50) {
@@ -330,9 +264,6 @@ document.addEventListener('DOMContentLoaded', function() {
             floatingGallery.classList.remove('visible');
             leftContent.style.backgroundColor = ''; // Reset to original color
             
-            // Hide contact section
-            contactSection.style.display = 'none';
-            contactSection.style.position = '';
             
             // Animate studies content
             setTimeout(() => {
@@ -364,9 +295,6 @@ document.addEventListener('DOMContentLoaded', function() {
             floatingGallery.classList.remove('visible');
             leftContent.style.backgroundColor = ''; // Reset to original color
             
-            // Hide contact section
-            contactSection.style.display = 'none';
-            contactSection.style.position = '';
             
             // Animate experience content
             setTimeout(() => {
@@ -437,14 +365,6 @@ document.addEventListener('DOMContentLoaded', function() {
             floatingGallery.classList.add('visible'); // Ensure visible class
             leftContent.style.backgroundColor = '#F4F3F1'; // Keep matching background
             
-            // Hide contact section
-            contactSection.style.display = 'none';
-            contactSection.style.position = '';
-            
-            // Reset contact animations
-            contactTitle.classList.remove('visible');
-            contactCards.forEach(card => card.classList.remove('visible'));
-            designerCredit.classList.remove('visible');
             
             // Ensure gallery is fully visible with floating
             galleryItems.forEach(item => {
@@ -468,38 +388,6 @@ document.addEventListener('DOMContentLoaded', function() {
             experienceTitle.classList.remove('visible');
             experienceCards.forEach(card => card.classList.remove('visible'));
             
-        } else if (scrolled > 4500) {
-            console.log('Showing contact section');
-            // Hide split screen layout
-            rightContent.style.display = 'none';
-            leftContent.style.display = 'none';
-            floatingGallery.style.display = 'none';
-            
-            // Show contact section full screen
-            contactSection.style.display = 'flex';
-            contactSection.style.position = 'fixed';
-            contactSection.style.top = '0';
-            contactSection.style.left = '0';
-            contactSection.style.right = '0';
-            contactSection.style.zIndex = '5';
-            
-            // Animate title first
-            setTimeout(() => {
-                contactTitle.classList.add('visible');
-            }, 200);
-            
-            // Animate contact cards after title
-            contactCards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.classList.add('visible');
-                }, 800 + (index * 200));
-            });
-            
-            // Show designer credit last
-            setTimeout(() => {
-                designerCredit.classList.add('visible');
-            }, 1600);
-            
         } else {
             // Initial state when at the very top of the page (scroll < 100)
             // Desktop behavior - reset any mobile color changes
@@ -519,9 +407,6 @@ document.addEventListener('DOMContentLoaded', function() {
             floatingGallery.style.display = 'none';
             floatingGallery.classList.remove('visible');
             
-            // Hide contact section
-            contactSection.style.display = 'none';
-            contactSection.style.position = '';
             
             // Reset all animations
             studiesTitle.classList.remove('visible');
@@ -540,7 +425,6 @@ document.addEventListener('DOMContentLoaded', function() {
         studiesSection.style.display = 'flex';
         experienceSection.style.display = 'flex';
         projectsSection.style.display = 'flex';
-        contactSection.style.display = 'none'; // Hide contact initially
         
         // Show mobile gallery after experience on mobile
         floatingGalleryMobile.style.display = 'block';
