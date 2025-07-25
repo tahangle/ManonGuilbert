@@ -1200,9 +1200,8 @@ body {
         display: block;
         position: relative;
         width: 100%;
-        padding: 60px 20px 40px;
+        padding: 0 30px;
         background-color: #EBEAE4;
-        margin-top: 80px;
     }
     
     .footer-links {
@@ -1214,7 +1213,7 @@ body {
     
     .footer-links a {
         font-family: 'ApercuMono', monospace;
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 400;
         text-transform: uppercase;
         color: #000;
