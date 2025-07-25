@@ -1,7 +1,7 @@
 @font-face {
-    font-family: 'CalvinoSemibold';
+    font-family: 'Calvino';
     src: url('fonts/Calvino-Book-trial.ttf') format('truetype');
-    font-weight: 625;
+    font-weight: normal;
     font-style: normal;
 }
 
@@ -53,9 +53,8 @@ body {
 }
 
 .logo h2 {
-    font-family: 'CalvinoSemibold', 'Times New Roman', serif;
+    font-family: 'Calvino', 'Times New Roman', serif;
     font-size: 30px;
-
     color: #000;
 }
 
@@ -77,9 +76,7 @@ body {
 
 }
 
-.nav-menu a:hover {
-    /* Keep same color, no opacity change */
-}
+/* Removed empty hover rule */
 
 .main-content {
     position: fixed;
@@ -120,11 +117,11 @@ body {
 }
 
 .intro-text h1 {
-    font-family: 'CalvinoSemibold', 'Times New Roman', serif;
+    font-family: 'Calvino', 'Times New Roman', serif;
     color: #000;
     font-size: 38px;
     font-style: normal;
-    font-weight: 625;
+    font-weight: normal;
     line-height: 99%;
 }
 
@@ -325,9 +322,9 @@ body {
     }
     
     .logo h2 {
-        font-family: 'CalvinoSemibold', 'Times New Roman', serif;
+        font-family: 'Calvino', 'Times New Roman', serif;
         font-size: 30px;
-        font-weight: 400;
+        font-weight: normal;
     }
     
     .menu-toggle {
@@ -383,10 +380,10 @@ body {
     }
     
     .intro-text h1 {
-        font-family: 'CalvinoSemibold', 'Times New Roman', serif;
+        font-family: 'Calvino', 'Times New Roman', serif;
         font-size: 28px;
         font-style: normal;
-        font-weight: 625;
+        font-weight: normal;
         line-height: 99%;
         width: 100%;
         height: auto;
