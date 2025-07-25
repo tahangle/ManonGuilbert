@@ -1107,10 +1107,11 @@ body {
 
 .developer-disclaimer {
     font-family: 'ApercuMono', monospace;
-    font-size: 9px;
+    font-size: 12px;
     font-weight: 300;
+    text-transform: uppercase;
     text-align: center;
-    margin-top: 20px;
+    margin-top: 25px;
     color: #999;
     line-height: 1.4;
 }
