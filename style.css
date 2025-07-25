@@ -36,6 +36,26 @@ body {
     overflow-x: hidden;
 }
 
+/* Developer Credit */
+.developer-credit {
+    position: fixed;
+    top: 0;
+    right: 0;
+    font-family: 'ApercuMono', monospace;
+    font-size: 9px;
+    font-weight: 300;
+    text-transform: uppercase;
+    background-color: #FFFFFF;
+    z-index: 1001;
+}
+
+/* Hide on mobile */
+@media (max-width: 768px) {
+    .developer-credit {
+        display: none;
+    }
+}
+
 .navbar {
     position: fixed;
     bottom: 0;
@@ -1020,8 +1040,7 @@ body {
     font-family: 'Calvino', 'Times New Roman', serif;
     font-size: 24px;
     font-weight: 400;
-    line-height: 1.2;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     text-align: center;
 }
 
@@ -1031,6 +1050,7 @@ body {
     line-height: 1.4;
     margin-bottom: 30px;
     text-align: center;
+    padding: 0 30px;
 }
 
 .contact-form {
