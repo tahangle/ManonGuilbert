@@ -154,12 +154,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Hide desktop gallery on mobile
             floatingGallery.style.display = 'none';
             
-            // Contact section only shows when scrolled to bottom
-            // Get the total height of all content before contact
-            const documentHeight = document.documentElement.scrollHeight;
-            const windowHeight = window.innerHeight;
-            const maxScroll = documentHeight - windowHeight;
-            
             // Show contact when scrolled near the bottom
             if (scrolled > maxScroll - 200) {
                 contactSection.style.display = 'flex';
