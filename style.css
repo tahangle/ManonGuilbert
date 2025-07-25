@@ -1,0 +1,484 @@
+@font-face {
+    font-family: 'CalvinoSemibold';
+    src: url('Fonts/Calvino-Book-trial.ttf') format('truetype');
+    font-weight: 625;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ApercuMono';
+    src: url('Fonts/ApercuMono-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'EbGaramond';
+    src: url('Fonts/EBGaramond-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Times New Roman', serif;
+    background-color: #EBEAE4;
+    color: #2c2c2c;
+    line-height: 1.6;
+    height: 300vh; /* Make body scrollable with more space */
+    overflow-x: hidden;
+}
+
+.navbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #EBEAE4;
+    z-index: 1000;
+    padding: 20px 30px;
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo h2 {
+    font-family: 'CalvinoSemibold', 'Times New Roman', serif;
+    font-size: 30px;
+
+    color: #000;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 120px;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: #2c2c2c;
+    font-family:'ApercuMono', monospace;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+    transition: opacity 0.3s ease;
+
+}
+
+.nav-menu a:hover {
+    /* Keep same color, no opacity change */
+}
+
+.main-content {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+}
+
+.left-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 60px 60px 30px;
+}
+
+.right-content {
+    background-color: #F4F3F1;
+    height: 100vh;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    display: flex;
+    align-items: center;
+}
+
+.right-content.visible {
+    opacity: 1;
+    transform: translateY(0);
+    padding-bottom: 88px;
+}
+
+.intro-section {
+    margin-bottom: 40px;
+}
+
+.intro-text h1 {
+    font-family: 'CalvinoSemibold', 'Times New Roman', serif;
+    color: #000;
+    font-size: 38px;
+    font-style: normal;
+    font-weight: 625;
+    line-height: 99%;
+}
+
+
+.description-section {
+    margin-top: 10px;
+}
+
+.description-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    width: 100%;
+}
+
+.description-left p,
+.description-right p {
+    font-family: "EBGaramond", serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100.17%; 
+    color: #2c2c2c;
+}
+
+.studies-section {
+    width: 100%;
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.section-title {
+    color: #000;
+    font-family: 'ApercuMono', monospace;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 0.42px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 80px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.section-title.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.studies-cards {
+    display: flex;
+    flex-direction: row;
+    gap: 80px;
+    justify-content: center;
+}
+
+.studies-card {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.studies-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.studies-card:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.institution {
+    color: #000;
+    text-align: center;
+    font-family: 'ApercuMono', monospace;
+    font-size: 9px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 100.17%;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.degree-title {
+    color: #000;
+    text-align: center;
+    font-family: 'EBGaramond', serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 100.17%;
+    margin-bottom: 5px;
+}
+
+.degree-type {
+    color: #000;
+    text-align: center;
+    font-family: 'ApercuMono', monospace;
+    font-size: 9px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 100.17%;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.study-details {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    color: #000;
+    text-align: center;
+    font-family: 'ApercuMono', monospace;
+    font-size: 9px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 100.17%;
+    text-transform: uppercase;
+}
+
+.experience-section {
+    width: 100%;
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.experience-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+    width: 100%;
+}
+
+.experience-card {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.experience-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.experience-card:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.experience-card:nth-child(3) {
+    transition-delay: 0.4s;
+}
+
+.experience-card:nth-child(4) {
+    transition-delay: 0.6s;
+}
+
+.menu-toggle {
+    display: none;
+    font-family: 'ApercuMono', monospace;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .navbar {
+        position: fixed;
+        top: 0;
+        bottom: auto;
+        border-top: none;
+        padding: 20px;
+        transition: background-color 0.3s ease;
+    }
+    
+    .navbar.beige-bg {
+        background-color: #F4F3F1;
+    }
+    
+    .nav-container {
+
+        position: relative;
+    }
+    
+    .logo h2 {
+        font-family: 'CalvinoSemibold', 'Times New Roman', serif;
+        font-size: 30px;
+        font-weight: 400;
+    }
+    
+    .menu-toggle {
+        display: block;
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
+    .nav-menu {
+        display: none;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background-color: #EBEAE4;
+        flex-direction: column;
+        padding: 20px;
+        gap: 20px;
+        transition: background-color 0.3s ease;
+    }
+    
+    .navbar.beige-bg .nav-menu {
+        background-color: #F4F3F1;
+    }
+    
+    .nav-menu.active {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        
+    }
+    
+    .main-content {
+        position: relative;
+        grid-template-columns: 1fr;
+        padding: 0;
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .left-content {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        min-height: calc(100vh - 80px);
+    }
+    
+    .intro-section {
+        margin-bottom: 0;
+    }
+    
+    .intro-text h1 {
+        font-family: 'CalvinoSemibold', 'Times New Roman', serif;
+        font-size: 28px;
+        font-style: normal;
+        font-weight: 625;
+        line-height: 99%;
+        width: 100%;
+        height: auto;
+        margin-bottom: 30px;
+    }
+    
+    .description-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        max-width: 100%;
+    }
+    
+    .description-left p,
+    .description-right p {
+        font-family: 'EBGaramond', serif;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100.17%;
+    }
+    
+    .right-content {
+        margin-top: 60px;
+        padding: 0;
+        position: relative;
+        height: auto;
+        display: block;
+        opacity: 1;
+        transform: none;
+        background-color: #F4F3F1;
+    }
+    
+    .studies-section,
+    .experience-section {
+        padding: 40px 20px;
+        display: flex !important;
+        width: 100%;
+        margin-bottom: 0;
+    }
+    
+    .section-title {
+        font-size: 12px;
+        margin-bottom: 40px;
+    }
+    
+    .studies-cards {
+        flex-direction: column;
+        gap: 40px;
+        opacity: 1;
+        transform: none;
+    }
+    
+    .experience-cards {
+        gap: 30px;
+    }
+    
+    .studies-card,
+    .experience-card {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    
+    .studies-card.visible,
+    .experience-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .institution {
+        font-family: 'ApercuMono', monospace;
+        font-size: 9px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 100.17%;
+        text-transform: uppercase;
+    }
+    
+    .degree-title {
+        font-family: 'EBGaramond', serif;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 100.17%;
+    }
+    
+    .degree-type,
+    .study-details {
+        font-family: 'ApercuMono', monospace;
+        font-size: 9px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: 100.17%;
+        text-transform: uppercase;
+    }
+}
