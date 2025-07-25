@@ -1,20 +1,20 @@
 @font-face {
     font-family: 'CalvinoSemibold';
-    src: url('Fonts/Calvino-Book-trial.ttf') format('truetype');
+    src: url('fonts/Calvino-Book-trial.ttf') format('truetype');
     font-weight: 625;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'ApercuMono';
-    src: url('Fonts/ApercuMono-Regular.ttf') format('truetype');
+    src: url('fonts/ApercuMono-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'EbGaramond';
-    src: url('Fonts/EBGaramond-Regular.ttf') format('truetype');
+    src: url('fonts/EBGaramond-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
