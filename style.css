@@ -537,9 +537,11 @@ body {
 }
 
 .project-link {
+    cursor: pointer;
     transition: font-weight 0.2s ease;
 }
 
+.project-link:hover,
 .project-link.highlight {
     font-weight: 600;
 }

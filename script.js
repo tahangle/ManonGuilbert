@@ -514,26 +514,24 @@ document.addEventListener('DOMContentLoaded', function() {
     galleryItems.forEach(item => {
         const projectName = item.getAttribute('data-project-name');
         
-        if (window.innerWidth > 768) {
-            // Desktop hover interactions
-            item.addEventListener('mouseenter', function() {
-                // Find and highlight the corresponding project link
-                projectLinks.forEach(link => {
-                    if (link.getAttribute('data-project-name') === projectName) {
-                        link.classList.add('highlight');
-                    }
-                });
-            });
-            
-            item.addEventListener('mouseleave', function() {
-                // Only remove highlight if modal is not open
-                if (!modal.classList.contains('active')) {
-                    projectLinks.forEach(link => {
-                        link.classList.remove('highlight');
-                    });
+        // Desktop hover interactions
+        item.addEventListener('mouseenter', function() {
+            // Find and highlight the corresponding project link
+            projectLinks.forEach(link => {
+                if (link.getAttribute('data-project-name') === projectName) {
+                    link.classList.add('highlight');
                 }
             });
-        }
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            // Only remove highlight if modal is not open
+            if (!modal.classList.contains('active')) {
+                projectLinks.forEach(link => {
+                    link.classList.remove('highlight');
+                });
+            }
+        });
         
         // Click functionality for modal (both desktop and mobile)
         item.addEventListener('click', function() {
@@ -555,34 +553,53 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Add click functionality to project titles on mobile
-    if (window.innerWidth <= 768) {
-        projectLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const projectName = this.getAttribute('data-project-name');
-                
-                // Find the corresponding image
-                const correspondingImage = Array.from(galleryItems).find(item => 
-                    item.getAttribute('data-project-name') === projectName
-                );
-                
-                if (correspondingImage) {
-                    // Set modal content
-                    modalImage.src = correspondingImage.src;
-                    modalImage.alt = correspondingImage.alt;
-                    photographerName.textContent = correspondingImage.getAttribute('data-photographer') || 'Unknown';
-                    stylistName.textContent = correspondingImage.getAttribute('data-stylist') || 'Unknown';
-                    
-                    // Show modal
-                    modal.classList.add('active');
-                    
-                    // Highlight this project
-                    this.classList.add('highlight');
+    // Add hover and click functionality to project titles
+    projectLinks.forEach(link => {
+        const projectName = link.getAttribute('data-project-name');
+        
+        // Hover effect - scale corresponding image
+        link.addEventListener('mouseenter', function() {
+            // Find and scale the corresponding image
+            galleryItems.forEach(item => {
+                if (item.getAttribute('data-project-name') === projectName) {
+                    item.style.transform = 'scale(1.05)';
                 }
             });
         });
-    }
+        
+        link.addEventListener('mouseleave', function() {
+            // Remove scale from corresponding image
+            galleryItems.forEach(item => {
+                if (item.getAttribute('data-project-name') === projectName) {
+                    item.style.transform = '';
+                }
+            });
+        });
+        
+        // Click functionality for modal
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Find the corresponding image
+            const correspondingImage = Array.from(galleryItems).find(item => 
+                item.getAttribute('data-project-name') === projectName
+            );
+            
+            if (correspondingImage) {
+                // Set modal content
+                modalImage.src = correspondingImage.src;
+                modalImage.alt = correspondingImage.alt;
+                photographerName.textContent = correspondingImage.getAttribute('data-photographer') || 'Unknown';
+                stylistName.textContent = correspondingImage.getAttribute('data-stylist') || 'Unknown';
+                
+                // Show modal
+                modal.classList.add('active');
+                
+                // Highlight this project
+                this.classList.add('highlight');
+            }
+        });
+    });
     
     // Store currently highlighted project
     let currentHighlightedProject = null;
