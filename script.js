@@ -167,15 +167,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 navMenu.style.backgroundColor = '#EBEAE4';
                 rightContent.style.backgroundColor = '#EBEAE4';
             } else if (scrolled >= studiesSectionTop - 200 && scrolled < mobileGalleryTop - 300) {
-                // Studies/Experience section - keep consistent background
-                navbar.style.backgroundColor = '#EBEAE4';
-                navMenu.style.backgroundColor = '#EBEAE4';
-                rightContent.style.backgroundColor = '#EBEAE4';
+                // Studies/Experience section - fade to lighter background
+                const transitionStart = studiesSectionTop - 200;
+                const transitionEnd = studiesSectionTop + 200;
+                let factor = Math.max(0, Math.min(1, (scrolled - transitionStart) / (transitionEnd - transitionStart)));
+                const interpolatedColor = interpolateColor('#EBEAE4', '#F4F3F1', factor);
+                navbar.style.backgroundColor = interpolatedColor;
+                navMenu.style.backgroundColor = interpolatedColor;
+                rightContent.style.backgroundColor = interpolatedColor;
             } else if (scrolled >= mobileGalleryTop - 300 && scrolled < maxScroll - 200) {
-                // Gallery section - back to original background
-                navbar.style.backgroundColor = '#EBEAE4';
-                navMenu.style.backgroundColor = '#EBEAE4';
-                rightContent.style.backgroundColor = '#EBEAE4';
+                // Gallery section - fade back to original background
+                const transitionStart = mobileGalleryTop - 300;
+                const transitionEnd = mobileGalleryTop - 100;
+                let factor = Math.max(0, Math.min(1, (scrolled - transitionStart) / (transitionEnd - transitionStart)));
+                const interpolatedColor = interpolateColor('#F4F3F1', '#EBEAE4', factor);
+                navbar.style.backgroundColor = interpolatedColor;
+                navMenu.style.backgroundColor = interpolatedColor;
+                rightContent.style.backgroundColor = interpolatedColor;
             }
             
             // Calculate trigger points based on actual content position
