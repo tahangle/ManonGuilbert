@@ -120,7 +120,6 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('scroll', function() {
         const scrolled = window.scrollY;
         const isMobile = window.innerWidth <= 768;
-        console.log('Current scroll:', scrolled, 'Is mobile:', isMobile);
         
         if (isMobile) {
             // Update active nav link for mobile based on scroll position
@@ -269,7 +268,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (scrolled > 100 && scrolled <= 1600) {
-            console.log('Showing studies section');
             // Show studies section
             rightContent.classList.add('visible');
             studiesSection.style.display = 'flex';
@@ -370,7 +368,6 @@ document.addEventListener('DOMContentLoaded', function() {
             projectCards.forEach(card => card.classList.remove('visible'));
             
         } else if (scrolled > 3400 && scrolled <= 4500) {
-            console.log('Showing projects section');
             // Show projects section
             rightContent.classList.add('visible');
             studiesSection.style.display = 'none';
@@ -644,7 +641,6 @@ document.addEventListener('DOMContentLoaded', function() {
     contactForm.addEventListener('submit', function(e) {
         e.preventDefault();
         // Here you would normally send the form data to a server
-        console.log('Form submitted');
         // For now, just close the modal
         contactModal.classList.remove('active');
         // Reset form
