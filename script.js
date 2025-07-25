@@ -88,11 +88,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Mobile menu toggle
+    // Mobile menu toggle with smooth animation
     menuToggle.addEventListener('click', function() {
-        navMenu.classList.toggle('active');
+        const span = menuToggle.querySelector('span');
         const isOpen = navMenu.classList.contains('active');
-        menuToggle.querySelector('span').textContent = isOpen ? '[ - ]' : '[ + ]';
+        
+        // Animate the toggle button
+        span.style.transform = 'scale(0.8)';
+        
+        setTimeout(() => {
+            navMenu.classList.toggle('active');
+            span.textContent = !isOpen ? '[ - ]' : '[ + ]';
+            span.style.transform = 'scale(1)';
+        }, 150);
     });
     
     // Color interpolation function
