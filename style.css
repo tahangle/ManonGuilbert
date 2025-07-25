@@ -1016,6 +1016,15 @@ body {
     opacity: 0.7;
 }
 
+.contact-heading {
+    font-family: 'Calvino', 'Times New Roman', serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
 .contact-intro {
     font-family: 'EB Garamond', serif;
     font-size: 16px;
@@ -1111,8 +1120,12 @@ body {
         width: 320px;
     }
     
+    .contact-heading {
+        font-size: 22px;
+    }
+    
     .contact-intro {
-        font-size: 18px;
+        font-size: 16px;
     }
 }
 
