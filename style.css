@@ -39,14 +39,15 @@ body {
 /* Developer Credit */
 .developer-credit {
     position: fixed;
-    top: 0;
-    right: 0;
+    top: 20px;
+    right: 30px;
     font-family: 'ApercuMono', monospace;
     font-size: 9px;
     font-weight: 300;
     text-transform: uppercase;
-    background-color: #FFFFFF;
     z-index: 1001;
+    color: #666;
+    opacity: 0.6;
 }
 
 /* Hide on mobile */
