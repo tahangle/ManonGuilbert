@@ -36,26 +36,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Developer Credit */
-.developer-credit {
-    position: fixed;
-    top: 20px;
-    right: 30px;
-    font-family: 'ApercuMono', monospace;
-    font-size: 9px;
-    font-weight: 300;
-    text-transform: uppercase;
-    z-index: 1001;
-    color: #666;
-    opacity: 0.6;
-}
-
-/* Hide on mobile */
-@media (max-width: 768px) {
-    .developer-credit {
-        display: none;
-    }
-}
 
 .navbar {
     position: fixed;
@@ -1123,6 +1103,16 @@ body {
 .submit-btn:hover {
     background-color: #000;
     color: #fff;
+}
+
+.developer-disclaimer {
+    font-family: 'ApercuMono', monospace;
+    font-size: 9px;
+    font-weight: 300;
+    text-align: center;
+    margin-top: 20px;
+    color: #999;
+    line-height: 1.4;
 }
 
 /* Position contact modal content differently on desktop */
