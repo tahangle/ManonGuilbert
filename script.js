@@ -65,6 +65,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     top: 200,
                     behavior: 'smooth'
                 });
+            } else if (targetId === 'contact') {
+                // Open contact modal
+                e.preventDefault();
+                contactModal.classList.add('active');
+                navMenu.classList.remove('active');
+                menuToggle.querySelector('span').textContent = '[ + ]';
+                return; // Don't update active link
+            }
             
             updateActiveLink(targetId);
         });
@@ -490,6 +498,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const photographerName = document.getElementById('photographer-name');
     const stylistName = document.getElementById('stylist-name');
     
+    // Contact Modal elements
+    const contactModal = document.getElementById('contact-modal');
+    const contactModalClose = document.querySelector('.contact-modal-close');
+    const contactForm = document.getElementById('contact-form');
+    
     // Gallery interactions
     galleryItems.forEach(item => {
         const projectName = item.getAttribute('data-project-name');
@@ -590,13 +603,41 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Close modal with Escape key
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            modal.classList.remove('active');
-            // Remove highlight from all project links
-            projectLinks.forEach(link => {
-                link.classList.remove('highlight');
-            });
-            currentHighlightedProject = null;
+        if (e.key === 'Escape') {
+            if (modal.classList.contains('active')) {
+                modal.classList.remove('active');
+                // Remove highlight from all project links
+                projectLinks.forEach(link => {
+                    link.classList.remove('highlight');
+                });
+                currentHighlightedProject = null;
+            }
+            if (contactModal.classList.contains('active')) {
+                contactModal.classList.remove('active');
+            }
         }
+    });
+    
+    // Contact modal handlers
+    contactModalClose.addEventListener('click', function() {
+        contactModal.classList.remove('active');
+    });
+    
+    // Close contact modal when clicking outside
+    contactModal.addEventListener('click', function(e) {
+        if (e.target === contactModal) {
+            contactModal.classList.remove('active');
+        }
+    });
+    
+    // Handle contact form submission
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        // Here you would normally send the form data to a server
+        console.log('Form submitted');
+        // For now, just close the modal
+        contactModal.classList.remove('active');
+        // Reset form
+        contactForm.reset();
     });
 });
