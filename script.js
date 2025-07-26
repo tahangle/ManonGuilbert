@@ -161,9 +161,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const mobileGalleryTop = floatingGalleryMobile.offsetTop;
             
             // Determine background color based on scroll position
-            if (scrolled < studiesSectionTop - 200) {
-                // Initial state - original background
-                navbar.style.backgroundColor = '#EBEAE4';
+            if (scrolled < 50) {
+                // Very top - navbar transparent
+                navbar.style.backgroundColor = 'transparent';
+                navMenu.style.backgroundColor = '#EBEAE4';
+                rightContent.style.backgroundColor = '#EBEAE4';
+            } else if (scrolled >= 50 && scrolled < studiesSectionTop - 200) {
+                // Fade from transparent to original background
+                const transitionStart = 50;
+                const transitionEnd = 150;
+                let factor = Math.max(0, Math.min(1, (scrolled - transitionStart) / (transitionEnd - transitionStart)));
+                const opacity = factor;
+                navbar.style.backgroundColor = `rgba(235, 234, 228, ${opacity})`;
                 navMenu.style.backgroundColor = '#EBEAE4';
                 rightContent.style.backgroundColor = '#EBEAE4';
             } else if (scrolled >= studiesSectionTop - 200 && scrolled < mobileGalleryTop - 300) {
@@ -458,8 +467,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Hide desktop gallery
         floatingGallery.style.display = 'none';
         
-        // Set initial colors for mobile
-        navbar.style.backgroundColor = '#EBEAE4';
+        // Set initial colors for mobile - navbar transparent, content normal
+        navbar.style.backgroundColor = 'transparent';
         navMenu.style.backgroundColor = '#EBEAE4';
         rightContent.style.backgroundColor = '#EBEAE4';
     } else {
@@ -500,7 +509,10 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (isNowMobile) {
                 // Ensure mobile styles are applied
                 floatingGalleryMobile.style.display = 'block';
-                navbar.style.backgroundColor = '#EBEAE4';
+                // Set navbar to transparent if at top, otherwise let scroll handler manage it
+                if (window.scrollY < 50) {
+                    navbar.style.backgroundColor = 'transparent';
+                }
                 navMenu.style.backgroundColor = '#EBEAE4';
                 rightContent.style.backgroundColor = '#EBEAE4';
                 

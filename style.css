@@ -866,7 +866,7 @@ body {
     
     /* Mobile Modal Styles */
     .modal {
-        width: 100%!important; 
+        width: 100% !important; 
         left: 0;
         right: 0;
         background-color: rgba(235, 234, 228, 0.95);
@@ -1085,6 +1085,7 @@ body {
     font-family: 'ApercuMono', monospace;
     font-size: 12px;
     font-weight: 300;
+    text-transform: uppercase;
     background: transparent;
     outline: none;
     transition: border-color 0.3s ease;
@@ -1095,6 +1096,7 @@ body {
 .contact-form input[type="tel"]::placeholder {
     color: #666;
     font-family: 'ApercuMono', monospace;
+    text-transform: uppercase;
 }
 
 .contact-form input:focus {
@@ -1112,6 +1114,7 @@ body {
     font-family: 'ApercuMono', monospace;
     font-size: 10px;
     line-height: 1.4;
+    text-transform: uppercase;
 }
 
 .checkbox-row input[type="checkbox"] {
@@ -1145,19 +1148,25 @@ body {
 }
 
 .developer-disclaimer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 25px;
     font-family: 'ApercuMono', monospace;
     font-size: 12px;
     font-weight: 300;
     text-transform: uppercase;
-    text-align: center;
-    margin-top: 25px;
     color: #999;
-    line-height: 1.4;
+}
+
+.developer-disclaimer span {
+    white-space: nowrap;
 }
 
 .developer-disclaimer a {
     color: #999;
-    text-decoration: underline;
+    text-decoration: none;
     transition: color 0.3s ease;
 }
 
