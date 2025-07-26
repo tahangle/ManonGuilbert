@@ -528,7 +528,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Desktop hover interactions
         item.addEventListener('mouseenter', function() {
-            // Find and highlight the corresponding project link
+            // Remove all highlights first
+            projectLinks.forEach(link => {
+                link.classList.remove('highlight');
+            });
+            // Then add highlight to the corresponding project link
             projectLinks.forEach(link => {
                 if (link.getAttribute('data-project-name') === projectName) {
                     link.classList.add('highlight');
@@ -537,10 +541,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         item.addEventListener('mouseleave', function() {
-            // Only remove highlight if modal is not open
+            // Remove highlight from this specific project if modal is not open
             if (!modal.classList.contains('active')) {
                 projectLinks.forEach(link => {
-                    link.classList.remove('highlight');
+                    if (link.getAttribute('data-project-name') === projectName) {
+                        link.classList.remove('highlight');
+                    }
                 });
             }
         });
@@ -556,7 +562,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Show modal
             modal.classList.add('active');
             
-            // Keep the project highlighted while modal is open
+            // Remove all highlights first, then add to the corresponding project
+            projectLinks.forEach(link => {
+                link.classList.remove('highlight');
+            });
             projectLinks.forEach(link => {
                 if (link.getAttribute('data-project-name') === projectName) {
                     link.classList.add('highlight');
@@ -586,6 +595,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     item.style.transform = '';
                 }
             });
+            // Remove highlight if modal is not open
+            if (!modal.classList.contains('active')) {
+                this.classList.remove('highlight');
+            }
         });
         
         // Click functionality for modal
@@ -607,7 +620,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Show modal
                 modal.classList.add('active');
                 
-                // Highlight this project
+                // Remove all highlights first, then highlight this project
+                projectLinks.forEach(link => {
+                    link.classList.remove('highlight');
+                });
                 this.classList.add('highlight');
             }
         });
