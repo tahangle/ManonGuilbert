@@ -20,17 +20,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const leftContent = document.querySelector('.left-content');
     const projectCards = document.querySelectorAll('.project-card');
     
+    // Initialize nav links with original text
+    navLinks.forEach(link => {
+        const originalText = link.textContent.replace(/\[|\]/g, '').trim();
+        link.setAttribute('data-original-text', originalText);
+    });
+    
     // Function to update active nav link with brackets
     function updateActiveLink(activeSection) {
         navLinks.forEach(link => {
             const href = link.getAttribute('href');
-            // Get the original text without any brackets
-            const originalText = link.getAttribute('data-original-text') || link.textContent.replace(/\[|\]/g, '').trim();
-            
-            // Store original text if not already stored
-            if (!link.getAttribute('data-original-text')) {
-                link.setAttribute('data-original-text', originalText);
-            }
+            const originalText = link.getAttribute('data-original-text');
             
             if (href === `#${activeSection}`) {
                 link.classList.add('active');
