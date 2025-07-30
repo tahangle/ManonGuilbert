@@ -20,27 +20,131 @@ document.addEventListener('DOMContentLoaded', function() {
     const leftContent = document.querySelector('.left-content');
     const projectCards = document.querySelectorAll('.project-card');
     
-    // Function to update active nav link
+    // Function to update active nav link with brackets
     function updateActiveLink(activeSection) {
         navLinks.forEach(link => {
             const href = link.getAttribute('href');
+            const linkText = link.textContent.replace(/\[|\]/g, '').trim();
             
             if (href === `#${activeSection}`) {
                 link.classList.add('active');
+                link.textContent = `[ ${linkText} ]`;
             } else {
                 link.classList.remove('active');
+                link.textContent = linkText;
             }
         });
     }
     
-    // Handle logo click to scroll to top
+    // Current section state
+    let currentSection = 'home';
+    
+    // Function to show section
+    function showSection(section) {
+        currentSection = section;
+        
+        // Hide all content first
+        textContent.style.display = 'none';
+        studiesSection.style.display = 'none';
+        experienceSection.style.display = 'none';
+        floatingGallery.style.display = 'none';
+        projectsSection.style.display = 'none';
+        rightContent.classList.remove('visible');
+        
+        // Reset all animations
+        studiesTitle.classList.remove('visible');
+        experienceTitle.classList.remove('visible');
+        projectsTitle.classList.remove('visible');
+        studiesCards.forEach(card => card.classList.remove('visible'));
+        experienceCards.forEach(card => card.classList.remove('visible'));
+        galleryItems.forEach(item => item.classList.remove('visible', 'floating'));
+        projectCards.forEach(card => card.classList.remove('visible'));
+        
+        switch(section) {
+            case 'home':
+                // Show intro text
+                textContent.style.display = 'block';
+                leftContent.style.backgroundColor = '#EBEAE4';
+                break;
+                
+            case 'about':
+                // Show studies on left
+                studiesSection.style.display = 'flex';
+                leftContent.style.backgroundColor = '#EBEAE4';
+                
+                // Animate studies
+                setTimeout(() => {
+                    studiesTitle.classList.add('visible');
+                }, 200);
+                studiesCards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                    }, 400 + (index * 200));
+                });
+                
+                // Show experience on right with delay
+                setTimeout(() => {
+                    rightContent.classList.add('visible');
+                    experienceSection.style.display = 'flex';
+                    
+                    setTimeout(() => {
+                        experienceTitle.classList.add('visible');
+                    }, 200);
+                    experienceCards.forEach((card, index) => {
+                        setTimeout(() => {
+                            card.classList.add('visible');
+                        }, 400 + (index * 200));
+                    });
+                }, 600);
+                break;
+                
+            case 'work':
+                // Show gallery on left
+                floatingGallery.style.display = 'flex';
+                leftContent.style.backgroundColor = '#F4F3F1';
+                
+                setTimeout(() => {
+                    floatingGallery.classList.add('visible');
+                    galleryItems.forEach((item, index) => {
+                        setTimeout(() => {
+                            item.classList.add('visible');
+                            setTimeout(() => {
+                                item.classList.add('floating');
+                            }, 500);
+                        }, 200 + (index * 150));
+                    });
+                }, 50);
+                
+                // Show projects on right
+                rightContent.classList.add('visible');
+                projectsSection.style.display = 'flex';
+                
+                setTimeout(() => {
+                    projectsTitle.classList.add('visible');
+                }, 400);
+                projectCards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                    }, 600 + (index * 200));
+                });
+                break;
+        }
+        
+        updateActiveLink(section);
+    }
+    
+    // Handle logo click to go to home
     const logoLink = document.querySelector('.logo a');
     logoLink.addEventListener('click', function(e) {
         e.preventDefault();
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+        if (window.innerWidth > 768) {
+            showSection('home');
+        } else {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
     });
     
     // Handle click on nav links
@@ -49,11 +153,20 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const targetId = this.getAttribute('href').substring(1);
             
-            if (targetId === 'work') {
-                // Scroll to gallery section
-                const isMobile = window.innerWidth <= 768;
-                if (isMobile) {
-                    // On mobile, scroll to mobile gallery
+            if (targetId === 'contact') {
+                // Open contact modal
+                contactModal.classList.add('active');
+                navMenu.classList.remove('active');
+                menuToggle.querySelector('span').textContent = '[ + ]';
+                return;
+            }
+            
+            // For desktop, use section navigation
+            if (window.innerWidth > 768) {
+                showSection(targetId);
+            } else {
+                // Mobile keeps scroll behavior for now
+                if (targetId === 'work') {
                     const mobileGallery = document.getElementById('floating-gallery-mobile');
                     if (mobileGallery) {
                         const galleryTop = mobileGallery.offsetTop;
@@ -62,29 +175,19 @@ document.addEventListener('DOMContentLoaded', function() {
                             behavior: 'smooth'
                         });
                     }
-                } else {
-                    // On desktop, scroll to 2650px for gallery
+                } else if (targetId === 'about') {
                     window.scrollTo({
-                        top: 2650,
+                        top: 200,
+                        behavior: 'smooth'
+                    });
+                } else if (targetId === 'home') {
+                    window.scrollTo({
+                        top: 0,
                         behavior: 'smooth'
                     });
                 }
-            } else if (targetId === 'about') {
-                // Scroll to about section
-                window.scrollTo({
-                    top: 200,
-                    behavior: 'smooth'
-                });
-            } else if (targetId === 'contact') {
-                // Open contact modal
-                e.preventDefault();
-                contactModal.classList.add('active');
-                navMenu.classList.remove('active');
-                menuToggle.querySelector('span').textContent = '[ + ]';
-                return; // Don't update active link
+                updateActiveLink(targetId);
             }
-            
-            updateActiveLink(targetId);
         });
     });
     
@@ -129,6 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const scrolled = window.scrollY;
         const isMobile = window.innerWidth <= 768;
         
+        // Only use scroll-based navigation on mobile
         if (isMobile) {
             // Update active nav link for mobile based on scroll position
             const mobileGallery = document.getElementById('floating-gallery-mobile');
@@ -277,183 +381,13 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Desktop active link logic
-        if (scrolled > 2600) {
-            // Gallery is visible, we're in "work" section
-            updateActiveLink('work');
-        } else if (scrolled > 50) {
-            // Text content is visible, we're in "about" section
-            updateActiveLink('about');
-        } else {
-            updateActiveLink(''); // Remove active state when at top
-        }
-        
-        if (scrolled > 100 && scrolled <= 1600) {
-            // Show studies section
-            rightContent.classList.add('visible');
-            studiesSection.style.display = 'flex';
-            experienceSection.style.display = 'none';
-            projectsSection.style.display = 'none';
-            
-            // Show text content, hide gallery, reset background
-            textContent.style.display = 'block';
-            floatingGallery.style.display = 'none';
-            floatingGallery.classList.remove('visible');
-            leftContent.style.backgroundColor = ''; // Reset to original color
-            
-            
-            // Animate studies content
-            setTimeout(() => {
-                studiesTitle.classList.add('visible');
-            }, 200);
-            studiesCards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.classList.add('visible');
-                }, 400 + (index * 200));
-            });
-            
-            // Reset other animations
-            experienceTitle.classList.remove('visible');
-            experienceCards.forEach(card => card.classList.remove('visible'));
-            galleryItems.forEach(item => {
-                item.classList.remove('visible', 'floating');
-            });
-            
-        } else if (scrolled > 1600 && scrolled <= 2600) {
-            // Show experience section with text content
-            rightContent.classList.add('visible');
-            studiesSection.style.display = 'none';
-            experienceSection.style.display = 'flex';
-            projectsSection.style.display = 'none';
-            
-            // Keep text content visible, reset left background
-            textContent.style.display = 'block';
-            floatingGallery.style.display = 'none';
-            floatingGallery.classList.remove('visible');
-            leftContent.style.backgroundColor = ''; // Reset to original color
-            
-            
-            // Animate experience content
-            setTimeout(() => {
-                experienceTitle.classList.add('visible');
-            }, 200);
-            
-            experienceCards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.classList.add('visible');
-                }, 400 + (index * 150));
-            });
-            
-            // Reset other animations
-            studiesTitle.classList.remove('visible');
-            studiesCards.forEach(card => card.classList.remove('visible'));
-            galleryItems.forEach(item => item.classList.remove('visible', 'floating'));
-            projectsTitle.classList.remove('visible');
-            projectCards.forEach(card => card.classList.remove('visible'));
-            
-        } else if (scrolled > 2600 && scrolled <= 3400) {
-            // Keep experience section, switch to gallery
-            rightContent.classList.add('visible');
-            studiesSection.style.display = 'none';
-            experienceSection.style.display = 'flex';
-            projectsSection.style.display = 'none';
-            
-            // Switch to gallery and change left background to match right
-            textContent.style.display = 'none';
-            floatingGallery.style.display = 'flex';
-            // Add visible class for fade-in effect
-            setTimeout(() => {
-                floatingGallery.classList.add('visible');
-            }, 50);
-            leftContent.style.backgroundColor = '#F4F3F1'; // Match right content background
-            
-            // Keep experience content visible
-            experienceTitle.classList.add('visible');
-            experienceCards.forEach(card => card.classList.add('visible'));
-            
-            // Animate gallery items
-            galleryItems.forEach((item, index) => {
-                setTimeout(() => {
-                    item.classList.add('visible');
-                    // Add floating animation after fade in
-                    setTimeout(() => {
-                        item.classList.add('floating');
-                    }, 500);
-                }, 200 + (index * 150));
-            });
-            
-            // Reset other animations
-            studiesTitle.classList.remove('visible');
-            studiesCards.forEach(card => card.classList.remove('visible'));
-            projectsTitle.classList.remove('visible');
-            projectCards.forEach(card => card.classList.remove('visible'));
-            
-        } else if (scrolled > 3400 && scrolled <= 4500) {
-            // Show projects section
-            rightContent.classList.add('visible');
-            studiesSection.style.display = 'none';
-            experienceSection.style.display = 'none';
-            projectsSection.style.display = 'flex';
-            
-            // Keep gallery visible and background color
-            textContent.style.display = 'none';
-            floatingGallery.style.display = 'flex';
-            floatingGallery.classList.add('visible'); // Ensure visible class
-            leftContent.style.backgroundColor = '#F4F3F1'; // Keep matching background
-            
-            
-            // Ensure gallery is fully visible with floating
-            galleryItems.forEach(item => {
-                item.classList.add('visible', 'floating');
-            });
-            
-            // Animate projects content
-            setTimeout(() => {
-                projectsTitle.classList.add('visible');
-            }, 200);
-            
-            projectCards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.classList.add('visible');
-                }, 400 + (index * 200));
-            });
-            
-            // Reset other animations
-            studiesTitle.classList.remove('visible');
-            studiesCards.forEach(card => card.classList.remove('visible'));
-            experienceTitle.classList.remove('visible');
-            experienceCards.forEach(card => card.classList.remove('visible'));
-            
-        } else {
-            // Initial state when at the very top of the page (scroll < 100)
-            // Desktop behavior - reset any mobile color changes
-            navbar.style.backgroundColor = '';
-            navMenu.style.backgroundColor = '';
-            rightContent.style.backgroundColor = '';
-            leftContent.style.backgroundColor = ''; // Reset left background
-            
-            // Hide right content when at the very top
-            rightContent.classList.remove('visible');
-            studiesSection.style.display = 'flex';
-            experienceSection.style.display = 'none';
-            projectsSection.style.display = 'none';
-            
-            // Show text content, hide gallery
-            textContent.style.display = 'block';
-            floatingGallery.style.display = 'none';
-            floatingGallery.classList.remove('visible');
-            
-            
-            // Reset all animations
-            studiesTitle.classList.remove('visible');
-            experienceTitle.classList.remove('visible');
-            projectsTitle.classList.remove('visible');
-            studiesCards.forEach(card => card.classList.remove('visible'));
-            experienceCards.forEach(card => card.classList.remove('visible'));
-            galleryItems.forEach(item => item.classList.remove('visible', 'floating'));
-            projectCards.forEach(card => card.classList.remove('visible'));
-        }
+        // Desktop uses section-based navigation, not scroll
     }, { passive: true });
+    
+    // Initialize with home section on desktop
+    if (window.innerWidth > 768) {
+        showSection('home');
+    }
     
     // Check on initial load
     if (window.innerWidth <= 768) {
