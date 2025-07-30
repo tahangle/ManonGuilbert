@@ -528,6 +528,114 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalImage = document.getElementById('modal-image');
     const photographerName = document.getElementById('photographer-name');
     const stylistName = document.getElementById('stylist-name');
+    const galleryContainer = document.querySelector('.modal-gallery-container');
+    
+    // Gallery data structure
+    const projectGalleries = {
+        'Vogue HK x Anya Taylor Joy': [
+            'projects/project2.jpg',
+            'projects/anya/VHK_066_IG_Coverstory-1280x800.jpg',
+            'projects/anya/VHK_066_IG_Coverstory2.jpg',
+            'projects/anya/VHK_066_IG_Coverstory3-1280x800.jpg',
+            'projects/anya/VHK_066_IG_Coverstory5.jpg',
+            'projects/anya/VHK_066_IG_Coverstory6.jpg',
+            'projects/anya/VHK_066_IG_Coverstory7.jpg',
+            'projects/anya/VHK_066_IG_Coverstory8-1280x800.jpg',
+            'projects/anya/VHK_066_IG_Coverstory9-1280x800.jpg',
+            'projects/anya/VHK_066_IG_Coverstory10.jpg',
+            'projects/anya/VHK_066_IG_Coverstory11.jpg'
+        ],
+        'Vogue HK x Rory Van Millingen': [
+            'projects/project6.jpg'
+            // Add more images to projects/hongkong/ folder to expand this gallery
+        ]
+    };
+    
+    let currentGalleryIndex = 0;
+    let currentProjectImages = [];
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    // Gallery navigation functions
+    function updateGalleryImage(index) {
+        if (currentProjectImages.length === 0) return;
+        
+        currentGalleryIndex = index;
+        modalImage.src = currentProjectImages[currentGalleryIndex];
+    }
+    
+    function nextImage() {
+        if (currentProjectImages.length > 1) {
+            currentGalleryIndex = (currentGalleryIndex + 1) % currentProjectImages.length;
+            updateGalleryImage(currentGalleryIndex);
+        }
+    }
+    
+    function previousImage() {
+        if (currentProjectImages.length > 1) {
+            currentGalleryIndex = (currentGalleryIndex - 1 + currentProjectImages.length) % currentProjectImages.length;
+            updateGalleryImage(currentGalleryIndex);
+        }
+    }
+    
+    
+    // Desktop click navigation with left/right zones
+    if (galleryContainer) {
+        galleryContainer.addEventListener('click', (e) => {
+            if (e.target === modalImage && window.innerWidth > 768) {
+                // Get click position relative to image
+                const rect = modalImage.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const width = rect.width;
+                
+                // If clicked on left half, go to previous image
+                if (x < width / 2) {
+                    previousImage();
+                } else {
+                    // If clicked on right half, go to next image
+                    nextImage();
+                }
+            }
+        });
+        
+        // Add hover effect to show different cursors
+        if (modalImage) {
+            modalImage.addEventListener('mousemove', (e) => {
+                if (window.innerWidth > 768 && currentProjectImages.length > 1) {
+                    const rect = modalImage.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const width = rect.width;
+                    
+                    if (x < width / 2) {
+                        modalImage.style.cursor = 'w-resize';
+                    } else {
+                        modalImage.style.cursor = 'e-resize';
+                    }
+                }
+            });
+        }
+    }
+    
+    // Mobile swipe functionality
+    if (galleryContainer) {
+        galleryContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        
+        galleryContainer.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+    }
+    
+    function handleSwipe() {
+        if (touchEndX < touchStartX - 50) {
+            nextImage(); // Swipe left
+        }
+        if (touchEndX > touchStartX + 50) {
+            previousImage(); // Swipe right
+        }
+    }
     
     // Contact Modal elements
     const contactModal = document.getElementById('contact-modal');
@@ -565,8 +673,20 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Click functionality for modal (both desktop and mobile)
         item.addEventListener('click', function() {
+            const projectName = this.getAttribute('data-project-name');
+            
+            // Check if this project has a gallery
+            if (projectGalleries[projectName]) {
+                currentProjectImages = projectGalleries[projectName];
+                currentGalleryIndex = 0;
+            } else {
+                // Single image project
+                currentProjectImages = [this.src];
+                currentGalleryIndex = 0;
+            }
+            
             // Set modal content
-            modalImage.src = this.src;
+            modalImage.src = currentProjectImages[0];
             modalImage.alt = this.alt;
             photographerName.textContent = this.getAttribute('data-photographer') || 'Unknown';
             stylistName.textContent = this.getAttribute('data-stylist') || 'Unknown';
@@ -623,8 +743,18 @@ document.addEventListener('DOMContentLoaded', function() {
             );
             
             if (correspondingImage) {
+                // Check if this project has a gallery
+                if (projectGalleries[projectName]) {
+                    currentProjectImages = projectGalleries[projectName];
+                    currentGalleryIndex = 0;
+                } else {
+                    // Single image project
+                    currentProjectImages = [correspondingImage.src];
+                    currentGalleryIndex = 0;
+                }
+                
                 // Set modal content
-                modalImage.src = correspondingImage.src;
+                modalImage.src = currentProjectImages[0];
                 modalImage.alt = correspondingImage.alt;
                 photographerName.textContent = correspondingImage.getAttribute('data-photographer') || 'Unknown';
                 stylistName.textContent = correspondingImage.getAttribute('data-stylist') || 'Unknown';

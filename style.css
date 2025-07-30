@@ -866,7 +866,7 @@ body {
     
     /* Mobile Modal Styles */
     .modal {
-        width: 100% !important; 
+        width: 100%!important; 
         left: 0;
         right: 0;
         background-color: rgba(235, 234, 228, 0.95);
@@ -957,6 +957,7 @@ body {
 
 .modal-image {
     width: 350px;
+    max-width: 550px;
     height: auto;
     object-fit: contain;
     display: block;
@@ -967,9 +968,31 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     width: 350px;
+    max-width: 550px;
     height: 40px;
     background-color: #F4F3F1;
     padding: 0;
+}
+
+/* Gallery functionality */
+.modal-gallery-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal-image {
+    cursor: pointer;
+}
+
+/* Touch and swipe support for mobile */
+@media (max-width: 768px) {
+    .modal-gallery-container {
+        cursor: default;
+        touch-action: pan-y;
+    }
 }
 
 .credit-column {
@@ -1065,7 +1088,6 @@ body {
     margin-bottom: 30px;
     text-align: center;
     padding: 0 30px;
-    display: none;
 }
 
 .contact-form {
@@ -1086,7 +1108,6 @@ body {
     font-family: 'ApercuMono', monospace;
     font-size: 12px;
     font-weight: 300;
-    text-transform: uppercase;
     background: transparent;
     outline: none;
     transition: border-color 0.3s ease;
@@ -1097,7 +1118,6 @@ body {
 .contact-form input[type="tel"]::placeholder {
     color: #666;
     font-family: 'ApercuMono', monospace;
-    text-transform: uppercase;
 }
 
 .contact-form input:focus {
@@ -1115,7 +1135,6 @@ body {
     font-family: 'ApercuMono', monospace;
     font-size: 10px;
     line-height: 1.4;
-    text-transform: uppercase;
 }
 
 .checkbox-row input[type="checkbox"] {
@@ -1149,20 +1168,14 @@ body {
 }
 
 .developer-disclaimer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin-top: 25px;
     font-family: 'ApercuMono', monospace;
     font-size: 12px;
     font-weight: 300;
     text-transform: uppercase;
+    text-align: center;
+    margin-top: 25px;
     color: #999;
-}
-
-.developer-disclaimer span {
-    white-space: nowrap;
+    line-height: 1.4;
 }
 
 .developer-disclaimer a {
@@ -1198,11 +1211,6 @@ body {
     .contact-intro {
         font-size: 16px;
     }
-    
-    /* Hide developer disclaimer on mobile since it's in the footer */
-    .developer-disclaimer {
-        display: none;
-    }
 }
 
 /* Mobile Footer */
@@ -1215,59 +1223,37 @@ body {
         display: block;
         position: relative;
         width: 100%;
-        padding: 60px 30px 40px 30px;
+        padding: 0 30px;
         background-color: #EBEAE4;
     }
     
-    .footer-top-row {
+    .footer-links {
         display: flex;
         justify-content: space-between;
-        align-items: center;
         width: 100%;
-        margin-bottom: 25px;
+        margin-bottom: 40px;
     }
     
-    .footer-top-row a {
+    .footer-links a {
         font-family: 'ApercuMono', monospace;
-        font-size: 12px;
-        font-weight: 500;
+        font-size: 12pupx;
+        font-weight: 400;
         text-transform: uppercase;
         color: #000;
         text-decoration: none;
         transition: opacity 0.3s ease;
     }
     
-    .footer-top-row a:hover {
+    .footer-links a:hover {
         opacity: 0.7;
     }
     
-    .merci {
+    .footer-credit {
         font-family: 'EB Garamond', serif;
         font-size: 16px;
-        font-weight: 600;
-    }
-    
-    .footer-bottom-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        font-family: 'ApercuMono', monospace;
-        font-size: 12px;
-        font-weight: 300;
-        text-transform: uppercase;
-        color: #999;
-        padding-top: 15px;
-    }
-    
-    .footer-bottom-row a {
-        color: #999;
-        text-decoration: none;
-        transition: opacity 0.3s ease;
-    }
-    
-    .footer-bottom-row a:hover {
-        opacity: 0.7;
+        font-weight: 400;
+        text-align: center;
+        text-transform: lowercase;
     }
 }
 
