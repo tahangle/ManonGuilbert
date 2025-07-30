@@ -867,6 +867,7 @@ body {
         border: none;
         background-color: #F4F3F1;
         padding: 0;
+        transform: translateX(0);
     }
     
     .modal-image {
@@ -916,8 +917,7 @@ body {
 .modal.active {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    padding-left: 25%;
+    justify-content: center;
 }
 
 .modal-content {
@@ -927,6 +927,7 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 0;
+    transform: translateX(-25%);
 }
 
 .modal-close {
