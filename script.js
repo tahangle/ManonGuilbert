@@ -562,6 +562,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         currentGalleryIndex = index;
         modalImage.src = currentProjectImages[currentGalleryIndex];
+        
+        // Add subtle animation on mobile when changing images
+        if (window.innerWidth <= 768 && currentProjectImages.length > 1) {
+            modalImage.style.opacity = '0.8';
+            setTimeout(() => {
+                modalImage.style.opacity = '1';
+            }, 150);
+        }
     }
     
     function nextImage() {
@@ -691,6 +699,15 @@ document.addEventListener('DOMContentLoaded', function() {
             photographerName.textContent = this.getAttribute('data-photographer') || 'Unknown';
             stylistName.textContent = this.getAttribute('data-stylist') || 'Unknown';
             
+            // Add class for mobile gallery hint animation
+            if (window.innerWidth <= 768 && currentProjectImages.length > 1) {
+                modalImage.classList.add('has-gallery');
+                // Remove class after animation completes
+                setTimeout(() => {
+                    modalImage.classList.remove('has-gallery');
+                }, 1100);
+            }
+            
             // Show modal
             modal.classList.add('active');
             
@@ -758,6 +775,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 modalImage.alt = correspondingImage.alt;
                 photographerName.textContent = correspondingImage.getAttribute('data-photographer') || 'Unknown';
                 stylistName.textContent = correspondingImage.getAttribute('data-stylist') || 'Unknown';
+                
+                // Add class for mobile gallery hint animation
+                if (window.innerWidth <= 768 && currentProjectImages.length > 1) {
+                    modalImage.classList.add('has-gallery');
+                    // Remove class after animation completes
+                    setTimeout(() => {
+                        modalImage.classList.remove('has-gallery');
+                    }, 1100);
+                }
                 
                 // Show modal
                 modal.classList.add('active');

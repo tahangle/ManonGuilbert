@@ -962,6 +962,7 @@ body {
     object-fit: contain;
     display: block;
     margin-top: 35px;
+    transition: opacity 0.2s ease-in-out;
 }
 
 .modal-credits {
@@ -992,6 +993,28 @@ body {
     .modal-gallery-container {
         cursor: default;
         touch-action: pan-y;
+    }
+}
+
+/* Mobile nudge animation */
+@keyframes nudgeHint {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(5px);
+    }
+    75% {
+        transform: translateX(-5px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .modal-image.has-gallery {
+        animation: nudgeHint 0.8s ease-in-out 0.3s;
     }
 }
 
