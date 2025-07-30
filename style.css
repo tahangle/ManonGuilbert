@@ -867,7 +867,10 @@ body {
         border: none;
         background-color: #F4F3F1;
         padding: 0;
-        transform: translateX(0);
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: translate(0, 0);
     }
     
     .modal-image {
@@ -922,12 +925,14 @@ body {
 
 .modal-content {
     background-color: #F4F3F1;
-    position: relative;
+    position: absolute;
+    left: 25%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 0;
-    transform: translateX(-25%);
 }
 
 .modal-close {
