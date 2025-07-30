@@ -156,16 +156,13 @@ body {
 .gallery-item {
     position: absolute;
     opacity: 0;
-    transition: opacity 1s ease-out, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: opacity 1s ease-out;
     cursor: pointer;
 }
 
-/* Hover effect for desktop only */
-@media (min-width: 769px) {
-    .gallery-item:hover {
-        transform: scale(1.05);
-        transition: transform 0.3s ease;
-    }
+/* Transform origin for smooth scaling */
+.gallery-item {
+    transform-origin: center center;
 }
 
 /* Position each image based on exact coordinates */

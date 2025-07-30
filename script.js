@@ -654,8 +654,15 @@ document.addEventListener('DOMContentLoaded', function() {
     galleryItems.forEach(item => {
         const projectName = item.getAttribute('data-project-name');
         
-        // Desktop hover interactions
+        // Desktop hover interactions with GSAP
         item.addEventListener('mouseenter', function() {
+            // Smooth scale animation with GSAP
+            gsap.to(this, {
+                scale: 1.05,
+                duration: 0.3,
+                ease: "power2.out"
+            });
+            
             // Remove all highlights first
             projectLinks.forEach(link => {
                 link.classList.remove('highlight');
@@ -669,6 +676,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         item.addEventListener('mouseleave', function() {
+            // Smooth scale back with GSAP
+            gsap.to(this, {
+                scale: 1,
+                duration: 0.3,
+                ease: "power2.out"
+            });
+            
             // Remove highlight from this specific project if modal is not open
             if (!modal.classList.contains('active')) {
                 projectLinks.forEach(link => {
@@ -727,12 +741,16 @@ document.addEventListener('DOMContentLoaded', function() {
     projectLinks.forEach(link => {
         const projectName = link.getAttribute('data-project-name');
         
-        // Hover effect - scale corresponding image
+        // Hover effect - scale corresponding image with GSAP
         link.addEventListener('mouseenter', function() {
             // Find and scale the corresponding image
             galleryItems.forEach(item => {
                 if (item.getAttribute('data-project-name') === projectName) {
-                    item.style.transform = 'scale(1.05)';
+                    gsap.to(item, {
+                        scale: 1.05,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
                 }
             });
         });
@@ -741,7 +759,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Remove scale from corresponding image
             galleryItems.forEach(item => {
                 if (item.getAttribute('data-project-name') === projectName) {
-                    item.style.transform = '';
+                    gsap.to(item, {
+                        scale: 1,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
                 }
             });
             // Remove highlight if modal is not open
