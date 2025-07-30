@@ -653,43 +653,88 @@ document.addEventListener('DOMContentLoaded', function() {
     // Gallery interactions
     galleryItems.forEach(item => {
         const projectName = item.getAttribute('data-project-name');
+        let floatingTween = null;
+        const floatDelay = parseFloat(item.getAttribute('data-float')) * 0.5;
         
-        // Desktop hover interactions with GSAP
-        item.addEventListener('mouseenter', function() {
-            // Smooth scale animation with GSAP
-            gsap.to(this, {
-                scale: 1.05,
-                duration: 0.3,
-                ease: "power2.out"
-            });
-            
-            // Remove all highlights first
-            projectLinks.forEach(link => {
-                link.classList.remove('highlight');
-            });
-            // Then add highlight to the corresponding project link
-            projectLinks.forEach(link => {
-                if (link.getAttribute('data-project-name') === projectName) {
-                    link.classList.add('highlight');
+        // Setup floating animation with GSAP for desktop
+        function startFloating() {
+            if (window.innerWidth > 768 && item.classList.contains('floating')) {
+                floatingTween = gsap.to(item, {
+                    y: -15,
+                    duration: 2,
+                    ease: "power1.inOut",
+                    yoyo: true,
+                    repeat: -1,
+                    delay: floatDelay
+                });
+            }
+        }
+        
+        // Check if item should float and start animation
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'class' && item.classList.contains('floating')) {
+                    startFloating();
                 }
             });
         });
+        observer.observe(item, { attributes: true });
         
-        item.addEventListener('mouseleave', function() {
-            // Smooth scale back with GSAP
-            gsap.to(this, {
-                scale: 1,
-                duration: 0.3,
-                ease: "power2.out"
-            });
-            
-            // Remove highlight from this specific project if modal is not open
-            if (!modal.classList.contains('active')) {
+        // Desktop hover interactions with GSAP
+        item.addEventListener('mouseenter', function() {
+            if (window.innerWidth > 768) {
+                // Kill floating animation during hover
+                if (floatingTween) {
+                    floatingTween.kill();
+                }
+                
+                // Smooth scale animation with GSAP
+                gsap.to(this, {
+                    scale: 1.05,
+                    y: 0,
+                    duration: 0.3,
+                    ease: "power2.out",
+                    overwrite: true
+                });
+                
+                // Remove all highlights first
+                projectLinks.forEach(link => {
+                    link.classList.remove('highlight');
+                });
+                // Then add highlight to the corresponding project link
                 projectLinks.forEach(link => {
                     if (link.getAttribute('data-project-name') === projectName) {
-                        link.classList.remove('highlight');
+                        link.classList.add('highlight');
                     }
                 });
+            }
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            if (window.innerWidth > 768) {
+                // Smooth scale back with GSAP
+                gsap.to(this, {
+                    scale: 1,
+                    y: 0,
+                    duration: 0.3,
+                    ease: "power2.out",
+                    overwrite: true,
+                    onComplete: () => {
+                        // Restart floating animation after hover
+                        if (item.classList.contains('floating')) {
+                            startFloating();
+                        }
+                    }
+                });
+                
+                // Remove highlight from this specific project if modal is not open
+                if (!modal.classList.contains('active')) {
+                    projectLinks.forEach(link => {
+                        if (link.getAttribute('data-project-name') === projectName) {
+                            link.classList.remove('highlight');
+                        }
+                    });
+                }
             }
         });
         
@@ -746,11 +791,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Find and scale the corresponding image
             galleryItems.forEach(item => {
                 if (item.getAttribute('data-project-name') === projectName) {
-                    gsap.to(item, {
-                        scale: 1.05,
-                        duration: 0.3,
-                        ease: "power2.out"
-                    });
+                    // Trigger the same hover effect as direct image hover
+                    item.dispatchEvent(new MouseEvent('mouseenter'));
                 }
             });
         });
@@ -759,11 +801,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Remove scale from corresponding image
             galleryItems.forEach(item => {
                 if (item.getAttribute('data-project-name') === projectName) {
-                    gsap.to(item, {
-                        scale: 1,
-                        duration: 0.3,
-                        ease: "power2.out"
-                    });
+                    // Trigger the same leave effect as direct image hover
+                    item.dispatchEvent(new MouseEvent('mouseleave'));
                 }
             });
             // Remove highlight if modal is not open

@@ -271,21 +271,7 @@ body {
     }
 }
 
-.gallery-item.floating {
-    animation: float 4s ease-in-out infinite;
-}
-
-/* Different animation delays for natural movement */
-.gallery-item[data-float="1"] { animation-delay: 0s; }
-.gallery-item[data-float="2"] { animation-delay: 0.3s; }
-.gallery-item[data-float="3"] { animation-delay: 0.6s; }
-.gallery-item[data-float="4"] { animation-delay: 0.9s; }
-.gallery-item[data-float="5"] { animation-delay: 1.2s; }
-.gallery-item[data-float="6"] { animation-delay: 1.5s; }
-.gallery-item[data-float="7"] { animation-delay: 1.8s; }
-.gallery-item[data-float="8"] { animation-delay: 2.1s; }
-.gallery-item[data-float="9"] { animation-delay: 2.4s; }
-.gallery-item[data-float="10"] { animation-delay: 2.7s; }
+/* Floating animation now handled by GSAP in JavaScript */
 
 .main-content {
     position: fixed;
