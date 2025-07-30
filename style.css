@@ -852,7 +852,9 @@ body {
         width: 100%!important; 
         left: 0;
         right: 0;
-        background-color: rgba(235, 234, 228, 0.95);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        background-color: rgba(235, 234, 228, 0.2);
     }
     
     .modal-content {
@@ -901,7 +903,15 @@ body {
     top: 0;
     width: 50%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background-color: rgba(255, 255, 255, 0.15);
+    background-image: 
+        linear-gradient(
+            to bottom right,
+            rgba(255, 255, 255, 0.1),
+            rgba(255, 255, 255, 0.05)
+        );
     align-items: center;
     justify-content: center;
 }
