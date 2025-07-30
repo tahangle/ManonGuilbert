@@ -24,20 +24,33 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateActiveLink(activeSection) {
         navLinks.forEach(link => {
             const href = link.getAttribute('href');
-            const linkText = link.textContent.replace(/\[|\]/g, '').trim();
+            // Get the original text without any brackets
+            const originalText = link.getAttribute('data-original-text') || link.textContent.replace(/\[|\]/g, '').trim();
+            
+            // Store original text if not already stored
+            if (!link.getAttribute('data-original-text')) {
+                link.setAttribute('data-original-text', originalText);
+            }
             
             if (href === `#${activeSection}`) {
                 link.classList.add('active');
-                link.textContent = `[ ${linkText} ]`;
+                link.textContent = `[ ${originalText} ]`;
             } else {
                 link.classList.remove('active');
-                link.textContent = linkText;
+                link.textContent = originalText;
             }
         });
     }
     
     // Current section state
     let currentSection = 'home';
+    
+    // Store original parent elements
+    const textContentParent = textContent.parentElement;
+    const studiesParent = studiesSection.parentElement;
+    const experienceParent = experienceSection.parentElement;
+    const galleryParent = floatingGallery.parentElement;
+    const projectsParent = projectsSection.parentElement;
     
     // Function to show section
     function showSection(section) {
@@ -51,6 +64,16 @@ document.addEventListener('DOMContentLoaded', function() {
         projectsSection.style.display = 'none';
         rightContent.classList.remove('visible');
         
+        // Clear left content children
+        while (leftContent.firstChild) {
+            leftContent.removeChild(leftContent.firstChild);
+        }
+        
+        // Clear right content children
+        while (rightContent.firstChild) {
+            rightContent.removeChild(rightContent.firstChild);
+        }
+        
         // Reset all animations
         studiesTitle.classList.remove('visible');
         experienceTitle.classList.remove('visible');
@@ -62,13 +85,15 @@ document.addEventListener('DOMContentLoaded', function() {
         
         switch(section) {
             case 'home':
-                // Show intro text
+                // Show intro text in left content
+                leftContent.appendChild(textContent);
                 textContent.style.display = 'block';
                 leftContent.style.backgroundColor = '#EBEAE4';
                 break;
                 
             case 'about':
-                // Show studies on left
+                // Show studies in left content
+                leftContent.appendChild(studiesSection);
                 studiesSection.style.display = 'flex';
                 leftContent.style.backgroundColor = '#EBEAE4';
                 
@@ -84,6 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Show experience on right with delay
                 setTimeout(() => {
+                    rightContent.appendChild(experienceSection);
                     rightContent.classList.add('visible');
                     experienceSection.style.display = 'flex';
                     
@@ -100,6 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
             case 'work':
                 // Show gallery on left
+                leftContent.appendChild(floatingGallery);
                 floatingGallery.style.display = 'flex';
                 leftContent.style.backgroundColor = '#F4F3F1';
                 
@@ -116,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 50);
                 
                 // Show projects on right
+                rightContent.appendChild(projectsSection);
                 rightContent.classList.add('visible');
                 projectsSection.style.display = 'flex';
                 
@@ -386,6 +414,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize with home section on desktop
     if (window.innerWidth > 768) {
+        // Set initial active state correctly
+        updateActiveLink('home');
         showSection('home');
     }
     
