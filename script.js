@@ -1,11 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Determine current page
+    const isWorkPage = document.body.classList.contains('work-page');
+    const isHomePage = !isWorkPage;
     const rightContent = document.querySelector('.right-content');
     const studiesSection = document.getElementById('studies-section');
     const experienceSection = document.getElementById('experience-section');
     const projectsSection = document.getElementById('projects-section');
-    const studiesTitle = studiesSection.querySelector('.section-title');
-    const experienceTitle = experienceSection.querySelector('.section-title');
-    const projectsTitle = projectsSection.querySelector('.section-title');
+    const studiesTitle = studiesSection ? studiesSection.querySelector('.section-title') : null;
+    const experienceTitle = experienceSection ? experienceSection.querySelector('.section-title') : null;
+    const projectsTitle = projectsSection ? projectsSection.querySelector('.section-title') : null;
     const studiesCards = document.querySelectorAll('.studies-card');
     const experienceCards = document.querySelectorAll('.experience-card');
     const menuToggle = document.getElementById('menu-toggle');
@@ -33,58 +36,36 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Handle logo click to scroll to top
+    // Handle logo click
     const logoLink = document.querySelector('.logo a');
-    logoLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
+    if (logoLink) {
+        logoLink.addEventListener('click', function(e) {
+            // Only prevent default if it's a hash link
+            const href = this.getAttribute('href');
+            if (href && href.startsWith('#')) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+            // Otherwise, let it navigate normally to index.html
         });
-    });
+    }
     
     // Handle click on nav links
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href').substring(1);
+            const href = this.getAttribute('href');
             
-            if (targetId === 'work') {
-                // Scroll to gallery section
-                const isMobile = window.innerWidth <= 768;
-                if (isMobile) {
-                    // On mobile, scroll to mobile gallery
-                    const mobileGallery = document.getElementById('floating-gallery-mobile');
-                    if (mobileGallery) {
-                        const galleryTop = mobileGallery.offsetTop;
-                        window.scrollTo({
-                            top: galleryTop - 100,
-                            behavior: 'smooth'
-                        });
-                    }
-                } else {
-                    // On desktop, scroll to 2650px for gallery
-                    window.scrollTo({
-                        top: 2650,
-                        behavior: 'smooth'
-                    });
-                }
-            } else if (targetId === 'about') {
-                // Scroll to about section
-                window.scrollTo({
-                    top: 200,
-                    behavior: 'smooth'
-                });
-            } else if (targetId === 'contact') {
-                // Open contact modal
+            // Only prevent default for contact modal
+            if (href === '#contact') {
                 e.preventDefault();
                 contactModal.classList.add('active');
                 navMenu.classList.remove('active');
                 menuToggle.querySelector('span').textContent = '[ + ]';
-                return; // Don't update active link
             }
-            
-            updateActiveLink(targetId);
+            // Let other links navigate normally
         });
     });
     
@@ -124,8 +105,40 @@ document.addEventListener('DOMContentLoaded', function() {
         return `rgb(${r}, ${g}, ${b})`;
     }
     
-    // Toggle animation based on scroll position
+    // Page-specific initialization
+    if (isWorkPage) {
+        // Work page specific setup
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const projectCards = document.querySelectorAll('.project-card');
+        const projectsTitle = projectsSection ? projectsSection.querySelector('.section-title') : null;
+        
+        // Animate gallery items on load
+        galleryItems.forEach((item, index) => {
+            setTimeout(() => {
+                item.classList.add('visible');
+                setTimeout(() => {
+                    item.classList.add('floating');
+                }, 500);
+            }, 200 + (index * 150));
+        });
+        
+        // Animate project cards on load
+        if (projectsTitle) {
+            setTimeout(() => {
+                projectsTitle.classList.add('visible');
+            }, 400);
+        }
+        projectCards.forEach((card, index) => {
+            setTimeout(() => {
+                card.classList.add('visible');
+            }, 600 + (index * 200));
+        });
+    }
+    
+    // Toggle animation based on scroll position (only for home page)
     window.addEventListener('scroll', function() {
+        if (isWorkPage) return; // No scroll animations on work page
+        
         const scrolled = window.scrollY;
         const isMobile = window.innerWidth <= 768;
         
@@ -133,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update active nav link for mobile based on scroll position
             const mobileGallery = document.getElementById('floating-gallery-mobile');
             const galleryTop = mobileGallery ? mobileGallery.offsetTop : 0;
-            const projectsTop = projectsSection.offsetTop;
+            const projectsTop = projectsSection ? projectsSection.offsetTop : 0;
             const documentHeight = document.documentElement.scrollHeight;
             const windowHeight = window.innerHeight;
             const maxScroll = documentHeight - windowHeight;
@@ -146,25 +159,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateActiveLink('');
             }
             
-            // On mobile, all sections are displayed vertically
-            studiesSection.style.display = 'flex';
-            experienceSection.style.display = 'flex';
-            projectsSection.style.display = 'flex';
-            floatingGalleryMobile.style.display = 'block';
-            textContent.style.display = 'block';
+            // On mobile, display sections that exist on current page
+            if (studiesSection) studiesSection.style.display = 'flex';
+            if (experienceSection) experienceSection.style.display = 'flex';
+            if (projectsSection) projectsSection.style.display = 'flex';
+            if (floatingGalleryMobile) floatingGalleryMobile.style.display = 'block';
+            if (textContent) textContent.style.display = 'block';
             // Hide desktop gallery on mobile
-            floatingGallery.style.display = 'none';
+            if (floatingGallery) floatingGallery.style.display = 'none';
             
             
             // Calculate trigger points for mobile
-            const studiesSectionTop = studiesSection.offsetTop;
-            const mobileGalleryTop = floatingGalleryMobile.offsetTop;
+            const studiesSectionTop = studiesSection ? studiesSection.offsetTop : 0;
+            const mobileGalleryTop = floatingGalleryMobile ? floatingGalleryMobile.offsetTop : 0;
+            
+            // Get experience section position for transition
+            const experienceSectionTop = experienceSection ? experienceSection.offsetTop : 0;
             
             // Determine background color based on scroll position
             if (scrolled < 50) {
                 // Very top - navbar transparent
                 navbar.style.backgroundColor = 'transparent';
-                navMenu.style.backgroundColor = '#EBEAE4';
                 rightContent.style.backgroundColor = '#EBEAE4';
             } else if (scrolled >= 50 && scrolled < studiesSectionTop - 200) {
                 // Fade from transparent to original background
@@ -173,38 +188,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 let factor = Math.max(0, Math.min(1, (scrolled - transitionStart) / (transitionEnd - transitionStart)));
                 const opacity = factor;
                 navbar.style.backgroundColor = `rgba(235, 234, 228, ${opacity})`;
-                navMenu.style.backgroundColor = '#EBEAE4';
                 rightContent.style.backgroundColor = '#EBEAE4';
-            } else if (scrolled >= studiesSectionTop - 200 && scrolled < mobileGalleryTop - 300) {
-                // Studies/Experience section - fade to lighter background
+            } else if (scrolled >= studiesSectionTop - 200 && scrolled < experienceSectionTop - 200) {
+                // Studies section - fade to F4F3F1 background
                 const transitionStart = studiesSectionTop - 200;
-                const transitionEnd = studiesSectionTop + 200;
+                const transitionEnd = studiesSectionTop + 100;
                 let factor = Math.max(0, Math.min(1, (scrolled - transitionStart) / (transitionEnd - transitionStart)));
                 const interpolatedColor = interpolateColor('#EBEAE4', '#F4F3F1', factor);
                 navbar.style.backgroundColor = interpolatedColor;
-                navMenu.style.backgroundColor = interpolatedColor;
                 rightContent.style.backgroundColor = interpolatedColor;
-            } else if (scrolled >= mobileGalleryTop - 300 && scrolled < maxScroll - 200) {
-                // Gallery section - fade back to original background
-                const transitionStart = mobileGalleryTop - 300;
-                const transitionEnd = mobileGalleryTop - 100;
+            } else if (scrolled >= experienceSectionTop - 200 && scrolled < mobileGalleryTop - 300) {
+                // Experience section - fade back to EBEAE4
+                const transitionStart = experienceSectionTop - 200;
+                const transitionEnd = experienceSectionTop + 100;
                 let factor = Math.max(0, Math.min(1, (scrolled - transitionStart) / (transitionEnd - transitionStart)));
                 const interpolatedColor = interpolateColor('#F4F3F1', '#EBEAE4', factor);
                 navbar.style.backgroundColor = interpolatedColor;
-                navMenu.style.backgroundColor = interpolatedColor;
                 rightContent.style.backgroundColor = interpolatedColor;
+            } else {
+                // Gallery and beyond - maintain EBEAE4
+                navbar.style.backgroundColor = '#EBEAE4';
+                rightContent.style.backgroundColor = '#EBEAE4';
             }
             
             // Calculate trigger points based on actual content position
             const studiesTrigger = 100;
-            const experienceSectionTop = experienceSection.offsetTop;
-            const experienceTrigger = Math.max(400, experienceSectionTop - window.innerHeight + 200);
-            const desktopGalleryTop = floatingGallery.offsetTop;
-            const galleryTrigger = Math.max(600, desktopGalleryTop - window.innerHeight + 200);
-            const projectsTrigger = Math.max(800, projectsTop - window.innerHeight + 200);
+            const experienceTrigger = experienceSection ? Math.max(400, experienceSectionTop - window.innerHeight + 200) : 400;
+            const desktopGalleryTop = floatingGallery ? floatingGallery.offsetTop : 0;
+            const galleryTrigger = floatingGallery ? Math.max(600, desktopGalleryTop - window.innerHeight + 200) : 600;
+            const projectsTrigger = projectsSection ? Math.max(800, projectsTop - window.innerHeight + 200) : 800;
             
             // Trigger animations based on scroll position
-            if (scrolled > studiesTrigger) {
+            if (scrolled > studiesTrigger && studiesTitle) {
                 // Animate studies content
                 setTimeout(() => {
                     studiesTitle.classList.add('visible');
@@ -216,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
             
-            if (scrolled > experienceTrigger) {
+            if (scrolled > experienceTrigger && experienceTitle) {
                 // Animate experience content
                 setTimeout(() => {
                     experienceTitle.classList.add('visible');
@@ -241,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
             
-            if (scrolled > projectsTrigger) {
+            if (scrolled > projectsTrigger && projectsTitle) {
                 // Animate projects content
                 setTimeout(() => {
                     projectsTitle.classList.add('visible');
@@ -256,12 +271,12 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Remove animations when scrolling back up
             if (scrolled <= studiesTrigger) {
-                studiesTitle.classList.remove('visible');
+                if (studiesTitle) studiesTitle.classList.remove('visible');
                 studiesCards.forEach(card => card.classList.remove('visible'));
             }
             
             if (scrolled <= experienceTrigger) {
-                experienceTitle.classList.remove('visible');
+                if (experienceTitle) experienceTitle.classList.remove('visible');
                 experienceCards.forEach(card => card.classList.remove('visible'));
             }
             
@@ -270,42 +285,49 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             if (scrolled <= projectsTrigger) {
-                projectsTitle.classList.remove('visible');
+                if (projectsTitle) projectsTitle.classList.remove('visible');
                 projectCards.forEach(card => card.classList.remove('visible'));
             }
             
             return;
         }
         
-        // Desktop active link logic
-        if (scrolled > 2600) {
-            // Gallery is visible, we're in "work" section
-            updateActiveLink('work');
-        } else if (scrolled > 50) {
-            // Text content is visible, we're in "about" section
-            updateActiveLink('about');
-        } else {
-            updateActiveLink(''); // Remove active state when at top
+        // Desktop behavior - only for home page
+        if (!isWorkPage) {
+            // Desktop active link logic
+            if (scrolled > 2600) {
+                // Gallery is visible, we're in "work" section
+                updateActiveLink('work');
+            } else if (scrolled > 50) {
+                // Text content is visible, we're in "about" section
+                updateActiveLink('about');
+            } else {
+                updateActiveLink(''); // Remove active state when at top
+            }
         }
         
         if (scrolled > 100 && scrolled <= 1600) {
             // Show studies section
-            rightContent.classList.add('visible');
-            studiesSection.style.display = 'flex';
-            experienceSection.style.display = 'none';
-            projectsSection.style.display = 'none';
+            if (rightContent) rightContent.classList.add('visible');
+            if (studiesSection) studiesSection.style.display = 'flex';
+            if (experienceSection) experienceSection.style.display = 'none';
+            if (projectsSection) projectsSection.style.display = 'none';
             
             // Show text content, hide gallery, reset background
-            textContent.style.display = 'block';
-            floatingGallery.style.display = 'none';
-            floatingGallery.classList.remove('visible');
-            leftContent.style.backgroundColor = ''; // Reset to original color
+            if (textContent) textContent.style.display = 'block';
+            if (floatingGallery) {
+                floatingGallery.style.display = 'none';
+                floatingGallery.classList.remove('visible');
+            }
+            if (leftContent) leftContent.style.backgroundColor = ''; // Reset to original color
             
             
             // Animate studies content
-            setTimeout(() => {
-                studiesTitle.classList.add('visible');
-            }, 200);
+            if (studiesTitle) {
+                setTimeout(() => {
+                    studiesTitle.classList.add('visible');
+                }, 200);
+            }
             studiesCards.forEach((card, index) => {
                 setTimeout(() => {
                     card.classList.add('visible');
@@ -313,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             // Reset other animations
-            experienceTitle.classList.remove('visible');
+            if (experienceTitle) experienceTitle.classList.remove('visible');
             experienceCards.forEach(card => card.classList.remove('visible'));
             galleryItems.forEach(item => {
                 item.classList.remove('visible', 'floating');
@@ -321,22 +343,26 @@ document.addEventListener('DOMContentLoaded', function() {
             
         } else if (scrolled > 1600 && scrolled <= 2600) {
             // Show experience section with text content
-            rightContent.classList.add('visible');
-            studiesSection.style.display = 'none';
-            experienceSection.style.display = 'flex';
-            projectsSection.style.display = 'none';
+            if (rightContent) rightContent.classList.add('visible');
+            if (studiesSection) studiesSection.style.display = 'none';
+            if (experienceSection) experienceSection.style.display = 'flex';
+            if (projectsSection) projectsSection.style.display = 'none';
             
             // Keep text content visible, reset left background
-            textContent.style.display = 'block';
-            floatingGallery.style.display = 'none';
-            floatingGallery.classList.remove('visible');
-            leftContent.style.backgroundColor = ''; // Reset to original color
+            if (textContent) textContent.style.display = 'block';
+            if (floatingGallery) {
+                floatingGallery.style.display = 'none';
+                floatingGallery.classList.remove('visible');
+            }
+            if (leftContent) leftContent.style.backgroundColor = ''; // Reset to original color
             
             
             // Animate experience content
-            setTimeout(() => {
-                experienceTitle.classList.add('visible');
-            }, 200);
+            if (experienceTitle) {
+                setTimeout(() => {
+                    experienceTitle.classList.add('visible');
+                }, 200);
+            }
             
             experienceCards.forEach((card, index) => {
                 setTimeout(() => {
@@ -345,30 +371,32 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             // Reset other animations
-            studiesTitle.classList.remove('visible');
+            if (studiesTitle) studiesTitle.classList.remove('visible');
             studiesCards.forEach(card => card.classList.remove('visible'));
             galleryItems.forEach(item => item.classList.remove('visible', 'floating'));
-            projectsTitle.classList.remove('visible');
+            if (projectsTitle) projectsTitle.classList.remove('visible');
             projectCards.forEach(card => card.classList.remove('visible'));
             
         } else if (scrolled > 2600 && scrolled <= 3400) {
             // Keep experience section, switch to gallery
-            rightContent.classList.add('visible');
-            studiesSection.style.display = 'none';
-            experienceSection.style.display = 'flex';
-            projectsSection.style.display = 'none';
+            if (rightContent) rightContent.classList.add('visible');
+            if (studiesSection) studiesSection.style.display = 'none';
+            if (experienceSection) experienceSection.style.display = 'flex';
+            if (projectsSection) projectsSection.style.display = 'none';
             
             // Switch to gallery and change left background to match right
-            textContent.style.display = 'none';
-            floatingGallery.style.display = 'flex';
-            // Add visible class for fade-in effect
-            setTimeout(() => {
-                floatingGallery.classList.add('visible');
-            }, 50);
-            leftContent.style.backgroundColor = '#F4F3F1'; // Match right content background
+            if (textContent) textContent.style.display = 'none';
+            if (floatingGallery) {
+                floatingGallery.style.display = 'flex';
+                // Add visible class for fade-in effect
+                setTimeout(() => {
+                    floatingGallery.classList.add('visible');
+                }, 50);
+            }
+            if (leftContent) leftContent.style.backgroundColor = '#F4F3F1'; // Match right content background
             
             // Keep experience content visible
-            experienceTitle.classList.add('visible');
+            if (experienceTitle) experienceTitle.classList.add('visible');
             experienceCards.forEach(card => card.classList.add('visible'));
             
             // Animate gallery items
@@ -383,23 +411,25 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             // Reset other animations
-            studiesTitle.classList.remove('visible');
+            if (studiesTitle) studiesTitle.classList.remove('visible');
             studiesCards.forEach(card => card.classList.remove('visible'));
-            projectsTitle.classList.remove('visible');
+            if (projectsTitle) projectsTitle.classList.remove('visible');
             projectCards.forEach(card => card.classList.remove('visible'));
             
         } else if (scrolled > 3400 && scrolled <= 4500) {
             // Show projects section
-            rightContent.classList.add('visible');
-            studiesSection.style.display = 'none';
-            experienceSection.style.display = 'none';
-            projectsSection.style.display = 'flex';
+            if (rightContent) rightContent.classList.add('visible');
+            if (studiesSection) studiesSection.style.display = 'none';
+            if (experienceSection) experienceSection.style.display = 'none';
+            if (projectsSection) projectsSection.style.display = 'flex';
             
             // Keep gallery visible and background color
-            textContent.style.display = 'none';
-            floatingGallery.style.display = 'flex';
-            floatingGallery.classList.add('visible'); // Ensure visible class
-            leftContent.style.backgroundColor = '#F4F3F1'; // Keep matching background
+            if (textContent) textContent.style.display = 'none';
+            if (floatingGallery) {
+                floatingGallery.style.display = 'flex';
+                floatingGallery.classList.add('visible'); // Ensure visible class
+            }
+            if (leftContent) leftContent.style.backgroundColor = '#F4F3F1'; // Keep matching background
             
             
             // Ensure gallery is fully visible with floating
@@ -408,9 +438,11 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             // Animate projects content
-            setTimeout(() => {
-                projectsTitle.classList.add('visible');
-            }, 200);
+            if (projectsTitle) {
+                setTimeout(() => {
+                    projectsTitle.classList.add('visible');
+                }, 200);
+            }
             
             projectCards.forEach((card, index) => {
                 setTimeout(() => {
@@ -419,35 +451,37 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             // Reset other animations
-            studiesTitle.classList.remove('visible');
+            if (studiesTitle) studiesTitle.classList.remove('visible');
             studiesCards.forEach(card => card.classList.remove('visible'));
-            experienceTitle.classList.remove('visible');
+            if (experienceTitle) experienceTitle.classList.remove('visible');
             experienceCards.forEach(card => card.classList.remove('visible'));
             
         } else {
             // Initial state when at the very top of the page (scroll < 100)
             // Desktop behavior - reset any mobile color changes
-            navbar.style.backgroundColor = '';
-            navMenu.style.backgroundColor = '';
-            rightContent.style.backgroundColor = '';
-            leftContent.style.backgroundColor = ''; // Reset left background
+            if (navbar) navbar.style.backgroundColor = '';
+            if (navMenu) navMenu.style.backgroundColor = '';
+            if (rightContent) rightContent.style.backgroundColor = '';
+            if (leftContent) leftContent.style.backgroundColor = ''; // Reset left background
             
             // Hide right content when at the very top
-            rightContent.classList.remove('visible');
-            studiesSection.style.display = 'flex';
-            experienceSection.style.display = 'none';
-            projectsSection.style.display = 'none';
+            if (rightContent) rightContent.classList.remove('visible');
+            if (studiesSection) studiesSection.style.display = 'flex';
+            if (experienceSection) experienceSection.style.display = 'none';
+            if (projectsSection) projectsSection.style.display = 'none';
             
             // Show text content, hide gallery
-            textContent.style.display = 'block';
-            floatingGallery.style.display = 'none';
-            floatingGallery.classList.remove('visible');
+            if (textContent) textContent.style.display = 'block';
+            if (floatingGallery) {
+                floatingGallery.style.display = 'none';
+                floatingGallery.classList.remove('visible');
+            }
             
             
             // Reset all animations
-            studiesTitle.classList.remove('visible');
-            experienceTitle.classList.remove('visible');
-            projectsTitle.classList.remove('visible');
+            if (studiesTitle) studiesTitle.classList.remove('visible');
+            if (experienceTitle) experienceTitle.classList.remove('visible');
+            if (projectsTitle) projectsTitle.classList.remove('visible');
             studiesCards.forEach(card => card.classList.remove('visible'));
             experienceCards.forEach(card => card.classList.remove('visible'));
             galleryItems.forEach(item => item.classList.remove('visible', 'floating'));
@@ -458,19 +492,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check on initial load
     if (window.innerWidth <= 768) {
         // Display sections but don't trigger animations until scroll
-        studiesSection.style.display = 'flex';
-        experienceSection.style.display = 'flex';
-        projectsSection.style.display = 'flex';
+        if (studiesSection) studiesSection.style.display = 'flex';
+        if (experienceSection) experienceSection.style.display = 'flex';
+        if (projectsSection) projectsSection.style.display = 'flex';
         
         // Show mobile gallery after experience on mobile
-        floatingGalleryMobile.style.display = 'block';
+        if (floatingGalleryMobile) floatingGalleryMobile.style.display = 'block';
         // Hide desktop gallery
-        floatingGallery.style.display = 'none';
+        if (floatingGallery) floatingGallery.style.display = 'none';
         
-        // Set initial colors for mobile - navbar transparent, content normal
-        navbar.style.backgroundColor = 'transparent';
-        navMenu.style.backgroundColor = '#EBEAE4';
-        rightContent.style.backgroundColor = '#EBEAE4';
+        // Set initial colors for mobile
+        if (isWorkPage) {
+            navbar.style.backgroundColor = '#F4F3F1';
+            if (rightContent) rightContent.style.backgroundColor = '#F4F3F1';
+        } else {
+            navbar.style.backgroundColor = 'transparent';
+            if (rightContent) rightContent.style.backgroundColor = '#EBEAE4';
+        }
     } else {
         // Reset styles for desktop
         navbar.style.backgroundColor = '';
@@ -478,9 +516,9 @@ document.addEventListener('DOMContentLoaded', function() {
         rightContent.style.backgroundColor = '';
         
         // Hide mobile gallery on desktop
-        floatingGalleryMobile.style.display = 'none';
+        if (floatingGalleryMobile) floatingGalleryMobile.style.display = 'none';
         // Ensure desktop gallery is absolutely positioned
-        floatingGallery.style.position = 'absolute';
+        if (floatingGallery) floatingGallery.style.position = 'absolute';
     }
     
     // Trigger initial scroll event to set correct state
@@ -502,18 +540,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 leftContent.style.backgroundColor = '';
                 
                 // Reset mobile-specific display properties
-                floatingGalleryMobile.style.display = 'none';
+                if (floatingGalleryMobile) floatingGalleryMobile.style.display = 'none';
                 
                 // Re-trigger scroll to set correct desktop state
                 window.dispatchEvent(new Event('scroll'));
             } else if (isNowMobile) {
                 // Ensure mobile styles are applied
-                floatingGalleryMobile.style.display = 'block';
-                // Set navbar to transparent if at top, otherwise let scroll handler manage it
-                if (window.scrollY < 50) {
+                if (floatingGalleryMobile) floatingGalleryMobile.style.display = 'block';
+                // Set navbar to transparent if at top on home page
+                if (!isWorkPage && window.scrollY < 50) {
                     navbar.style.backgroundColor = 'transparent';
                 }
-                navMenu.style.backgroundColor = '#EBEAE4';
                 rightContent.style.backgroundColor = '#EBEAE4';
                 
                 // Re-trigger scroll to set correct mobile state

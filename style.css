@@ -128,6 +128,17 @@ body {
 }
 
 
+/* Page-specific body styles */
+body.work-page {
+    background-color: #F4F3F1;
+}
+
+@media (min-width: 769px) {
+    body.work-page .left-content {
+        background-color: #F4F3F1;
+    }
+}
+
 /* Floating Gallery */
 .floating-gallery {
     position: absolute;
@@ -141,6 +152,23 @@ body {
     overflow: hidden;
     opacity: 0;
     transition: opacity 0.8s ease-out;
+}
+
+/* Show gallery immediately on work page - desktop only */
+@media (min-width: 769px) {
+    body.work-page .floating-gallery {
+        display: flex;
+        opacity: 1;
+    }
+}
+
+body.work-page .right-content {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+body.work-page .projects-section {
+    display: flex;
 }
 
 .floating-gallery.visible {
@@ -590,13 +618,26 @@ body {
         min-height: 100vh;
     }
     
+    /* Hide desktop gallery on mobile */
+    #floating-gallery {
+        display: none !important;
+    }
+    
     .navbar {
         position: fixed;
         top: 0;
         bottom: auto;
+        left: 0;
+        right: 0;
+        width: 100%;
         border-top: none;
         padding: 20px;
         transition: background-color 0.3s ease;
+        z-index: 1000;
+    }
+    
+    body.work-page .navbar {
+        background-color: #F4F3F1 !important;
     }
     
     /* Removed navbar.beige-bg for mobile */
@@ -624,7 +665,7 @@ body {
         top: 60px;
         left: 0;
         right: 0;
-        background-color: #EBEAE4;
+        background-color: inherit; /* Inherit from navbar */
         flex-direction: column;
         padding: 20px;
         gap: 20px;
@@ -729,109 +770,152 @@ body {
         font-size: 12px;
     }
     
-    /* Mobile Gallery */
+    /* Mobile Gallery - Horizontal Scrolling */
     .floating-gallery.mobile-gallery {
         position: relative !important;
         width: 100% !important;
-        margin-top: 0;
-        padding: 40px 10px;
-        height: auto;
-        min-height: 600px;
-        background-color: #EBEAE4 !important;
+        margin: 0;
+        padding: 20px 0;
+        height: 380px;
+        background-color: transparent !important;
         display: none; /* Hidden by default, JS will show it */
         z-index: 1;
         opacity: 1 !important;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: #999 transparent;
+        flex-shrink: 0;
+    }
+    
+    /* Show mobile gallery on work page */
+    body.work-page .floating-gallery.mobile-gallery {
+        display: block !important;
+    }
+    
+    /* Work page specific mobile styles */
+    body.work-page {
+        background-color: #F4F3F1;
+    }
+    
+    body.work-page .main-content {
+        position: static;
+        padding-top: 100px; /* Space for fixed navbar */
+        min-height: 100vh;
+        display: block;
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    
+    body.work-page .left-content {
+        display: none !important;
+    }
+    
+    body.work-page .right-content {
+        background-color: #F4F3F1;
+        opacity: 1 !important;
+        transform: none !important;
+        position: static;
+        height: auto;
+        display: block;
+        margin-top: 0;
+        padding: 0;
+    }
+    
+    /* Custom scrollbar for webkit browsers */
+    .floating-gallery.mobile-gallery::-webkit-scrollbar {
+        height: 4px;
+    }
+    
+    .floating-gallery.mobile-gallery::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    .floating-gallery.mobile-gallery::-webkit-scrollbar-thumb {
+        background: #999;
+        border-radius: 2px;
     }
     
     .floating-gallery.mobile-gallery .gallery-grid {
-        position: relative;
-        width: 100%;
-        height: 700px;
-        overflow: hidden;
+        display: flex;
+        align-items: flex-start;
+        gap: 5px;
+        padding: 0 20px;
+        width: max-content;
+        height: 100%;
     }
     
     .floating-gallery.mobile-gallery .gallery-item {
-        position: absolute;
+        position: relative;
         object-fit: cover;
         opacity: 1;
+        flex-shrink: 0;
     }
     
-    /* Exact positioning for mobile gallery based on provided coordinates */
-    /* Project 5 */
-    .floating-gallery.mobile-gallery .gallery-item[data-float="1"] { 
-        left: -83px;
-        top: 186px;
-        width: 127px;
-        height: 158px;
+    
+    /* Specific dimensions for each image in order */
+    /* Rory Van */
+    .floating-gallery.mobile-gallery .mobile-item-1 { 
+        width: 200px;
+        height: 200px;
     }
-    /* Project 6 */
-    .floating-gallery.mobile-gallery .gallery-item[data-float="2"] { 
-        left: 78px;
-        top: 186px;
-        width: 126px;
-        height: 126px;
+    /* Felix Cooper */
+    .floating-gallery.mobile-gallery .mobile-item-2 { 
+        width: 140px;
+        height: 174px;
     }
-    /* Project 3 */
-    .floating-gallery.mobile-gallery .gallery-item[data-float="3"] { 
-        left: 216px;
-        top: 204px;
-        width: 124px;
-        height: 149px;
+    /* Georgia Palmer */
+    .floating-gallery.mobile-gallery .mobile-item-3 { 
+        width: 232px;
+        height: 307px;
     }
-    /* Project 8 */
-    .floating-gallery.mobile-gallery .gallery-item[data-float="4"] { 
-        left: 369px;
-        top: 148px;
-        width: 115px;
-        height: 152px;
+    /* Amber Valletta x Muse */
+    .floating-gallery.mobile-gallery .mobile-item-4 { 
+        width: 285px;
+        height: 356px;
     }
-    /* Project 9 */
-    .floating-gallery.mobile-gallery .gallery-item[data-float="5"] { 
-        left: -60px;
-        top: 389px;
-        width: 127px;
-        height: 159px;
+    /* Marle Magazine */
+    .floating-gallery.mobile-gallery .mobile-item-5 { 
+        width: 190px;
+        height: 279px;
     }
-    /* Project 2 */
-    .floating-gallery.mobile-gallery .gallery-item[data-float="6"] { 
-        left: 100px;
-        top: 351px;
-        width: 124px;
-        height: 78px;
+    /* Oaxaca */
+    .floating-gallery.mobile-gallery .mobile-item-6 { 
+        width: 179px;
+        height: 216px;
     }
-    /* Project 7 */
-    .floating-gallery.mobile-gallery .gallery-item[data-float="7"] { 
-        left: 288px;
-        top: 343px;
-        width: 68px;
-        height: 86px;
+    /* Amber Valletta x Vogue */
+    .floating-gallery.mobile-gallery .mobile-item-7 { 
+        width: 200px;
+        height: 251px;
     }
-    /* Project 4 */
-    .floating-gallery.mobile-gallery .gallery-item[data-float="8"] { 
-        left: 128px;
-        top: 456px;
-        width: 124px;
-        height: 156px;
+    /* Anya Taylor */
+    .floating-gallery.mobile-gallery .mobile-item-8 { 
+        width: 313px;
+        height: 196px;
     }
-    /* Project 11 */
-    .floating-gallery.mobile-gallery .gallery-item[data-float="9"] { 
-        left: 256px;
-        top: 461px;
-        width: 100px;
-        height: 100px;
+    /* Sora Choi */
+    .floating-gallery.mobile-gallery .mobile-item-9 { 
+        width: 201px;
+        height: 251px;
     }
-    /* Project 10 */
-    .floating-gallery.mobile-gallery .gallery-item[data-float="10"] { 
-        left: 369px;
-        top: 438px;
-        width: 48px;
-        height: 60px;
+    /* Rolling Stone x Shakira */
+    .floating-gallery.mobile-gallery .mobile-item-10 { 
+        width: 134px;
+        height: 167px;
     }
     
     /* Mobile Projects */
     .projects-section {
         padding: 40px 20px;
-        background-color: #EBEAE4;
+        background-color: transparent;
+        display: flex !important;
+        position: relative;
+    }
+    
+    body.work-page .projects-section {
+        margin-top: 20px;
     }
     
     .projects-cards {
@@ -858,20 +942,11 @@ body {
     }
     
     .modal.active {
-        padding-left: 0;
+        padding: 0;
         justify-content: center;
+        align-items: center;
     }
     
-    .modal-content {
-        width: auto;
-        border: none;
-        background-color: #F4F3F1;
-        padding: 0;
-        position: relative;
-        left: auto;
-        top: auto;
-        transform: translate(0, 0);
-    }
     
     .modal-image {
         width: 210px;
@@ -926,7 +1001,7 @@ body {
 .modal-content {
     background-color: #F4F3F1;
     position: absolute;
-    left: 25%;
+    left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     display: flex;
@@ -1235,47 +1310,4 @@ body {
     }
 }
 
-/* Mobile Footer */
-.mobile-footer {
-    display: none;
-}
-
-@media (max-width: 768px) {
-    .mobile-footer {
-        display: block;
-        position: relative;
-        width: 100%;
-        padding: 0 30px;
-        background-color: #EBEAE4;
-    }
-    
-    .footer-links {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        margin-bottom: 40px;
-    }
-    
-    .footer-links a {
-        font-family: 'ApercuMono', monospace;
-        font-size: 12pupx;
-        font-weight: 400;
-        text-transform: uppercase;
-        color: #000;
-        text-decoration: none;
-        transition: opacity 0.3s ease;
-    }
-    
-    .footer-links a:hover {
-        opacity: 0.7;
-    }
-    
-    .footer-credit {
-        font-family: 'EB Garamond', serif;
-        font-size: 16px;
-        font-weight: 400;
-        text-align: center;
-        text-transform: lowercase;
-    }
-}
 
